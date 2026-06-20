@@ -1280,16 +1280,22 @@
     }
 
     function scrollAEvento(contenedorId, indexEvento) {
-      const contenedor = document.getElementById(contenedorId);
-      if (!contenedor || indexEvento < 0) return;
-      
-      const filas = contenedor.querySelectorAll('tbody tr');
-      if (indexEvento >= filas.length) return;
-      
-      const fila = filas[indexEvento];
-      const scrollOffset = fila.offsetTop - contenedor.offsetTop - 20;
-      
-      contenedor.scrollTop = Math.max(0, scrollOffset);
+      setTimeout(() => {
+        const tbody = document.getElementById(contenedorId);
+        if (!tbody || indexEvento < 0) return;
+        
+        const filas = tbody.querySelectorAll('tr');
+        if (indexEvento >= filas.length) return;
+        
+        const fila = filas[indexEvento];
+        
+        try {
+          fila.scrollIntoView({ behavior: 'auto', block: 'start' });
+          console.log(`[scrollAEvento] Evento ${indexEvento} posicionado en parte superior`);
+        } catch (e) {
+          console.error(`[scrollAEvento] Error al hacer scroll:`, e);
+        }
+      }, 200);
     }
 
     function convertirHoraAMinutos(horaStr) {
