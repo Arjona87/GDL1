@@ -689,14 +689,42 @@
           <button class="theme-btn" id="themeBtn">☀️ VISTA</button>
           <button class="theme-btn" id="updateBtn" style="background-color: var(--primary); color: var(--primary-foreground);">🔄 ACTUALIZAR</button>
         </div>
-        <div class="reloj">
-          <div class="reloj-hora"><span id="relojHora">18:00</span>:<span id="relojSegundos">00</span></div>
-          <div class="reloj-label">HORA DEL SISTEMA · 24H</div>
+        <div style="display: flex; align-items: center; gap: 2rem;">
+          <div class="reloj" style="text-align: center;">
+            <div style="font-size: 0.75rem; color: var(--muted-foreground); margin-bottom: 0.5rem;" id="relojFecha">18/06</div>
+            <div class="reloj-hora"><span id="relojHora">18:00</span>:<span id="relojSegundos">00</span></div>
+            <div class="reloj-label">HORA DEL SISTEMA · 24H</div>
+          </div>
         </div>
       </div>
 
       <!-- CONTENT -->
       <div class="content">
+        <!-- SECTION: AHORA / PROXIMOS 30 MINUTOS -->
+        <div class="section" id="ahoraProximos" style="margin-bottom: 2rem;">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+            <!-- AHORA -->
+            <div style="background-color: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem;">
+              <div style="font-size: 0.75rem; color: var(--muted-foreground); margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 0.1em;">AHORA</div>
+              <div style="font-size: 2rem; font-weight: bold; color: var(--primary); margin-bottom: 0.5rem;" id="ahoraHora">--:--</div>
+              <div style="font-size: 1rem; color: var(--foreground); margin-bottom: 0.5rem;" id="ahoraActividad">--</div>
+              <div style="font-size: 0.85rem; color: var(--muted-foreground); margin-bottom: 1rem;" id="ahoraUbicacion">--</div>
+              <div style="margin-bottom: 1rem;" id="ahoraBadge"></div>
+              <div style="background-color: rgba(255, 165, 0, 0.2); border-radius: 4px; height: 8px; overflow: hidden; margin-bottom: 1rem;">
+                <div style="background-color: var(--primary); height: 100%; width: 0%;" id="ahoraProgreso"></div>
+              </div>
+              <div style="font-size: 0.7rem; color: var(--muted-foreground);" id="ahoraRango">--</div>
+            </div>
+            <!-- PROXIMOS 30 MINUTOS -->
+            <div style="background-color: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem;">
+              <div style="font-size: 0.75rem; color: var(--muted-foreground); margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 0.1em;">PROXIMOS 30 MINUTOS</div>
+              <div style="display: flex; flex-direction: column; gap: 1rem; max-height: 300px; overflow-y: auto;" id="proximosEventos">
+                <div style="color: var(--muted-foreground); text-align: center; padding: 2rem 0;">Cargando eventos...</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- SECTION: INCIDENCIAS ESTADIO -->
         <div class="section" id="incidencias">
           <div class="section-title">INCIDENCIAS ESTADIO · BITÁCORA TÁCTICA</div>
@@ -1169,7 +1197,103 @@
       `).join('');
     }
 
+    function convertirHoraAMinutos(horaStr) {
+      if (!horaStr) return -1;
+      const partes = String(horaStr).split(':');
+      if (partes.length < 2) return -1;
+      const horas = parseInt(partes[0]) || 0;
+      const minutos = parseInt(partes[1]) || 0;
+      return horas * 60 + minutos;
+    }
+
+    function obtenerEventoActual() {
+      if (!state.itinerario || state.itinerario.length === 0) return null;
+      
+      const ahora = new Date();
+      const horaActual = ahora.getHours() * 60 + ahora.getMinutes();
+      
+      for (let evt of state.itinerario) {
+        const horaEvt = convertirHoraAMinutos(evt.hora);
+        if (horaEvt >= 0) {
+          const proximoEvt = state.itinerario[state.itinerario.indexOf(evt) + 1];
+          const horaProxima = proximoEvt ? convertirHoraAMinutos(proximoEvt.hora) : horaEvt + 60;
+          
+          if (horaActual >= horaEvt && horaActual < horaProxima) {
+            return { ...evt, horaEvt, horaProxima };
+          }
+        }
+      }
+      return null;
+    }
+
+    function obtenerProximos30Minutos() {
+      if (!state.itinerario || state.itinerario.length === 0) return [];
+      
+      const ahora = new Date();
+      const horaActual = ahora.getHours() * 60 + ahora.getMinutes();
+      const horaLimite = horaActual + 30;
+      
+      return state.itinerario.filter(evt => {
+        const horaEvt = convertirHoraAMinutos(evt.hora);
+        return horaEvt >= horaActual && horaEvt <= horaLimite;
+      });
+    }
+
+    function renderAhoraProximos() {
+      const eventoActual = obtenerEventoActual();
+      const proximosEventos = obtenerProximos30Minutos();
+      
+      const ahora = new Date();
+      const horaActualMin = ahora.getHours() * 60 + ahora.getMinutes();
+      
+      if (eventoActual) {
+        const horas = String(Math.floor(eventoActual.horaEvt / 60)).padStart(2, '0');
+        const mins = String(eventoActual.horaEvt % 60).padStart(2, '0');
+        
+        document.getElementById('ahoraHora').textContent = `${horas}:${mins}`;
+        document.getElementById('ahoraActividad').textContent = eventoActual.actividad || eventoActual.mision || '--';
+        document.getElementById('ahoraUbicacion').textContent = eventoActual.fecha || 'Estadio Guadalajara';
+        
+        const progreso = ((horaActualMin - eventoActual.horaEvt) / (eventoActual.horaProxima - eventoActual.horaEvt)) * 100;
+        document.getElementById('ahoraProgreso').style.width = Math.max(0, Math.min(100, progreso)) + '%';
+        
+        document.getElementById('ahoraRango').textContent = `${String(Math.floor(eventoActual.horaEvt / 60)).padStart(2, '0')}:${String(eventoActual.horaEvt % 60).padStart(2, '0')} - ${String(Math.floor(eventoActual.horaProxima / 60)).padStart(2, '0')}:${String(eventoActual.horaProxima % 60).padStart(2, '0')}`;
+        
+        const badge = document.getElementById('ahoraBadge');
+        badge.innerHTML = '<span style="background-color: #10b981; color: white; padding: 0.25rem 0.75rem; border-radius: 4px; font-size: 0.75rem; font-weight: bold;">En Posicion</span>';
+      } else {
+        document.getElementById('ahoraHora').textContent = '--:--';
+        document.getElementById('ahoraActividad').textContent = 'Sin evento';
+        document.getElementById('ahoraUbicacion').textContent = '--';
+        document.getElementById('ahoraBadge').innerHTML = '';
+        document.getElementById('ahoraProgreso').style.width = '0%';
+        document.getElementById('ahoraRango').textContent = '--';
+      }
+      
+      const proximosDiv = document.getElementById('proximosEventos');
+      if (proximosEventos.length === 0) {
+        proximosDiv.innerHTML = '<div style="color: var(--muted-foreground); text-align: center; padding: 2rem 0;">Sin eventos en los proximos 30 min</div>';
+      } else {
+        proximosDiv.innerHTML = proximosEventos.map(evt => {
+          const horaEvt = convertirHoraAMinutos(evt.hora);
+          const horas = String(Math.floor(horaEvt / 60)).padStart(2, '0');
+          const mins = String(horaEvt % 60).padStart(2, '0');
+          const emoji = evt.mision && evt.mision.includes('Camerinos') ? '🎬' : evt.mision && evt.mision.includes('Descanso') ? '😴' : '📍';
+          return `
+            <div style="display: flex; align-items: center; gap: 1rem; padding: 0.75rem; border-left: 3px solid var(--primary);">
+              <div style="font-size: 1.5rem;">${emoji}</div>
+              <div>
+                <div style="font-size: 0.85rem; color: var(--muted-foreground);">${horas}:${mins}</div>
+                <div style="font-size: 0.9rem; color: var(--foreground);">${evt.actividad || evt.mision || '--'}</div>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+    }
+
     function renderizarUI() {
+      renderAhoraProximos();
       renderIncidencias();
       renderEdoFuerza();
       renderItinerario();
@@ -1180,10 +1304,13 @@
 
     function actualizarReloj() {
       const ahora = new Date();
+      const dia = String(ahora.getDate()).padStart(2, '0');
+      const mes = String(ahora.getMonth() + 1).padStart(2, '0');
       const horas = String(ahora.getHours()).padStart(2, '0');
       const minutos = String(ahora.getMinutes()).padStart(2, '0');
       const segundos = String(ahora.getSeconds()).padStart(2, '0');
 
+      document.getElementById('relojFecha').textContent = `${dia}/${mes}`;
       document.getElementById('relojHora').textContent = `${horas}:${minutos}`;
       document.getElementById('relojSegundos').textContent = segundos;
     }
@@ -1232,6 +1359,7 @@
       actualizarReloj();
 
       setInterval(actualizarReloj, 1000);
+      setInterval(renderAhoraProximos, 1000);
       setInterval(actualizarDatosDinamicos, POLLING_INTERVAL);
 
       document.getElementById('themeBtn').addEventListener('click', alternarTema);
