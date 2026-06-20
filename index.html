@@ -734,6 +734,7 @@
             <table class="comms-table" style="margin: 0;">
               <thead>
                 <tr>
+                  <th>Fecha</th>
                   <th>Hora</th>
                   <th>Incidente</th>
                 </tr>
@@ -930,7 +931,7 @@
     // ===== PROCESADORES DE DATOS ADAPTADOS A ESTRUCTURA REAL =====
 
     /**
-     * Procesa incidentes desde CSV con estructura: Hora, Incidente
+     * Procesa incidentes desde CSV con estructura: Fecha, Hora, Incidente
      */
     function procesarIncidentes(rawData) {
       addDebugLog('incidencias', `Procesando ${rawData.length} filas de incidentes...`, 'info');
@@ -938,6 +939,7 @@
       const procesados = rawData
         .filter(row => row.Hora && row.Incidente)
         .map(row => ({
+          fecha: String(row.Fecha || '').trim(),
           hora: String(row.Hora || '').trim(),
           incidente: String(row.Incidente || '').trim()
         }));
@@ -1082,7 +1084,7 @@
       const totIncidencias = document.getElementById('totIncidencias');
 
       if (!state.incidentes || state.incidentes.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="2" style="text-align: center; color: var(--muted-foreground);">Sin incidencias registradas</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="3" style="text-align: center; color: var(--muted-foreground);">Sin incidencias registradas</td></tr>';
         totIncidencias.textContent = '0';
         return;
       }
@@ -1091,6 +1093,7 @@
 
       tbody.innerHTML = state.incidentes.map(inc => `
         <tr>
+          <td>${inc.fecha}</td>
           <td><strong>${inc.hora}</strong></td>
           <td>${inc.incidente}</td>
         </tr>
