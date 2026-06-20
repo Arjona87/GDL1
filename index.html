@@ -442,693 +442,7 @@
       color: var(--muted-foreground);
     }
 
-    /* ===== CONTROLES DE SIMULACIÓN ===== */
-    .simulation-controls {
-      background-color: var(--card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 1rem;
-      display: flex;
-      gap: 1rem;
-      align-items: center;
-      margin-bottom: 1.5rem;
-    }
-
-    .sim-button {
-      background-color: var(--primary);
-      color: var(--primary-foreground);
-      border: none;
-      padding: 0.5rem 1rem;
-      border-radius: var(--radius);
-      cursor: pointer;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.75rem;
-      font-weight: 600;
-      transition: all 0.2s ease-out;
-    }
-
-    .sim-button:hover {
-      opacity: 0.9;
-    }
-
-    .sim-button:active {
-      transform: scale(0.97);
-    }
-
-    .sim-slider {
-      flex: 1;
-      height: 6px;
-      border-radius: 3px;
-      background: linear-gradient(90deg, var(--accent), var(--primary));
-      outline: none;
-      -webkit-appearance: none;
-      appearance: none;
-    }
-
-    .sim-slider::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      appearance: none;
-      width: 16px;
-      height: 16px;
-      border-radius: 50%;
-      background: var(--primary);
-      cursor: pointer;
-      box-shadow: 0 0 8px var(--primary);
-    }
-
-    .sim-slider::-moz-range-thumb {
-      width: 16px;
-      height: 16px;
-      border-radius: 50%;
-      background: var(--primary);
-      cursor: pointer;
-      border: none;
-      box-shadow: 0 0 8px var(--primary);
-    }
-
-    .sim-time {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.75rem;
-      color: var(--muted-foreground);
-      min-width: 60px;
-    }
-
-    /* ===== FOCO AHORA ===== */
-    .foco-grid {
-      display: grid;
-      grid-template-columns: 1fr 2fr;
-      gap: 1rem;
-    }
-
-    .foco-ahora {
-      background-color: var(--card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 1.5rem;
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-    }
-
-    .foco-ahora-label {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.75rem;
-      color: var(--primary);
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-    }
-
-    .foco-ahora-content {
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
-    }
-
-    .foco-hora {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 1.5rem;
-      font-weight: 700;
-      font-variant-numeric: tabular-nums;
-    }
-
-    .foco-titulo {
-      font-size: 1rem;
-      font-weight: 600;
-    }
-
-    .foco-ubicacion {
-      font-size: 0.875rem;
-      color: var(--muted-foreground);
-    }
-
-    .foco-chip {
-      display: inline-flex;
-      width: fit-content;
-      padding: 0.25rem 0.75rem;
-      border-radius: var(--radius);
-      font-size: 0.75rem;
-      font-weight: 600;
-      border: 1px solid;
-    }
-
-    .avance-bar {
-      width: 100%;
-      height: 8px;
-      background-color: var(--accent);
-      border-radius: 4px;
-      overflow: hidden;
-      margin-top: 1rem;
-    }
-
-    .avance-fill {
-      height: 100%;
-      background: linear-gradient(90deg, var(--primary), oklch(0.78 0.15 70 / 0.6));
-      transition: width 0.3s ease-out;
-    }
-
-    .avance-label {
-      font-size: 0.75rem;
-      color: var(--muted-foreground);
-      margin-top: 0.5rem;
-    }
-
-    .proximos-30 {
-      background-color: var(--card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 1.5rem;
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-    }
-
-    .proximos-label {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.75rem;
-      color: var(--primary);
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-    }
-
-    .hito-item {
-      display: flex;
-      gap: 0.75rem;
-      padding: 0.75rem;
-      border-radius: var(--radius);
-      border-left: 3px solid;
-      font-size: 0.875rem;
-      animation: fade-up 0.4s ease-out;
-    }
-
-    .hito-item-time {
-      font-family: 'JetBrains Mono', monospace;
-      font-weight: 600;
-      min-width: 50px;
-    }
-
-    .hito-item-content {
-      flex: 1;
-    }
-
-    .hito-item-emoji {
-      font-size: 1rem;
-    }
-
-    .proximos-list {
-      max-height: 200px;
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-    }
-
-    /* ===== ALERTAS ===== */
-    .alertas-container {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-    }
-
-    .alerta-card {
-      background-color: var(--card);
-      border: 2px solid;
-      border-radius: var(--radius);
-      padding: 1.5rem;
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-    }
-
-    .alerta-card.activa {
-      box-shadow: 0 0 20px rgba(239, 68, 68, 0.3);
-      border-color: #ef4444;
-    }
-
-    .alerta-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: start;
-    }
-
-    .alerta-titulo {
-      font-size: 1rem;
-      font-weight: 600;
-    }
-
-    .alerta-ventana {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.75rem;
-      color: var(--muted-foreground);
-    }
-
-    .alerta-badge {
-      background-color: #ef4444;
-      color: white;
-      padding: 0.25rem 0.5rem;
-      border-radius: var(--radius);
-      font-size: 0.75rem;
-      font-weight: 600;
-    }
-
-    .alerta-descripcion {
-      font-size: 0.875rem;
-      color: var(--muted-foreground);
-    }
-
-    .alerta-recomendacion {
-      background-color: oklch(0.78 0.15 70 / 10%);
-      border-left: 3px solid var(--primary);
-      padding: 0.75rem;
-      border-radius: var(--radius);
-      font-size: 0.875rem;
-    }
-
-    .capsulas-timer {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
-      gap: 0.5rem;
-      margin-top: 1rem;
-    }
-
-    .capsula-item {
-      background-color: var(--accent);
-      padding: 0.5rem;
-      border-radius: var(--radius);
-      text-align: center;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.75rem;
-      border: 1px solid var(--border);
-    }
-
-    .alerta-counter {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.75rem;
-      color: var(--muted-foreground);
-      margin-top: 0.5rem;
-    }
-
-    /* ===== TIMELINE ===== */
-    .timeline-filters {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 1rem;
-      margin-bottom: 1.5rem;
-      background-color: var(--card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 1rem;
-    }
-
-    .filter-group {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-    }
-
-    .filter-label {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.75rem;
-      color: var(--primary);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-
-    .filter-buttons {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-    }
-
-    .filter-btn {
-      padding: 0.4rem 0.75rem;
-      border: 1px solid var(--border);
-      background-color: transparent;
-      color: var(--muted-foreground);
-      border-radius: var(--radius);
-      cursor: pointer;
-      font-size: 0.75rem;
-      transition: all 0.2s ease-out;
-    }
-
-    .filter-btn:hover {
-      border-color: var(--primary);
-      color: var(--primary);
-    }
-
-    .filter-btn.active {
-      background-color: var(--primary);
-      color: var(--primary-foreground);
-      border-color: var(--primary);
-    }
-
-    .severity-legend {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-    }
-
-    .severity-dot {
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      cursor: pointer;
-      transition: all 0.2s ease-out;
-      border: 2px solid transparent;
-    }
-
-    .severity-dot:hover {
-      transform: scale(1.2);
-    }
-
-    .severity-dot.active {
-      border-color: var(--foreground);
-      box-shadow: 0 0 8px currentColor;
-    }
-
-    .timeline-list {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-      position: relative;
-    }
-
-    .timeline-list::before {
-      content: '';
-      position: absolute;
-      left: 20px;
-      top: 0;
-      bottom: 0;
-      width: 2px;
-      background: linear-gradient(180deg, var(--primary), transparent);
-    }
-
-    .timeline-item {
-      display: flex;
-      gap: 1rem;
-      padding-left: 1rem;
-      position: relative;
-      cursor: pointer;
-      transition: all 0.2s ease-out;
-    }
-
-    .timeline-node {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      border: 2px solid;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      margin-top: 0.25rem;
-      position: relative;
-      z-index: 1;
-    }
-
-    .timeline-node.activo {
-      animation: pulse-live 1.6s infinite;
-    }
-
-    .timeline-content {
-      flex: 1;
-      background-color: var(--card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 1rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .timeline-info {
-      display: flex;
-      flex-direction: column;
-      gap: 0.25rem;
-    }
-
-    .timeline-hora {
-      font-family: 'JetBrains Mono', monospace;
-      font-weight: 700;
-      font-size: 0.875rem;
-      font-variant-numeric: tabular-nums;
-    }
-
-    .timeline-titulo {
-      font-size: 0.875rem;
-      font-weight: 600;
-    }
-
-    .timeline-delegacion {
-      font-size: 0.75rem;
-      color: var(--muted-foreground);
-    }
-
-    .timeline-chip {
-      display: inline-flex;
-      padding: 0.25rem 0.5rem;
-      border-radius: var(--radius);
-      font-size: 0.7rem;
-      font-weight: 600;
-      border: 1px solid;
-    }
-
-    .timeline-item.pasado {
-      opacity: 0.4;
-    }
-
-    .timeline-item.inminente .timeline-chip {
-      background-color: #eab308;
-      color: #000;
-      border-color: #eab308;
-    }
-
-    .timeline-item.activo .timeline-chip {
-      background-color: #ef4444;
-      color: white;
-      border-color: #ef4444;
-    }
-
-    .timeline-item.futuro .timeline-chip {
-      background-color: var(--accent);
-      color: var(--foreground);
-      border-color: var(--border);
-    }
-
-    .timeline-expanded {
-      background-color: var(--popover);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 1rem;
-      margin-top: 0.5rem;
-      max-height: 640px;
-      overflow-y: auto;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1rem;
-    }
-
-    .expanded-field {
-      display: flex;
-      flex-direction: column;
-      gap: 0.25rem;
-    }
-
-    .expanded-label {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.7rem;
-      color: var(--primary);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-
-    .expanded-value {
-      font-size: 0.875rem;
-      color: var(--foreground);
-    }
-
-    .timeline-counter {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.75rem;
-      color: var(--muted-foreground);
-      margin-top: 1rem;
-    }
-
-    /* ===== MAPA ===== */
-    .mapa-container {
-      display: grid;
-      grid-template-columns: 1fr 300px;
-      gap: 1rem;
-    }
-
-    .mapa-visual {
-      background: linear-gradient(135deg, rgba(0,0,0,0.4), rgba(0,0,0,0.2)),
-                  url('https://d2xsxph8kpxj0f.cloudfront.net/310419663031442398/aY3EEaALubQxCRHywAzhk5/map_gdl-i7fDwRSrpcsCLGWtK8Q5p6.webp');
-      background-size: cover;
-      background-position: center;
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      position: relative;
-      min-height: 300px;
-    }
-
-    .marcador {
-      position: absolute;
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      border: 2px solid;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: all 0.2s ease-out;
-      font-size: 1rem;
-      transform: translate(-50%, -50%);
-    }
-
-    .marcador:hover {
-      transform: translate(-50%, -50%) scale(1.15);
-    }
-
-    .marcador.activo {
-      animation: pulse-live 1.6s infinite;
-      box-shadow: 0 0 20px currentColor;
-    }
-
-    .mapa-panel {
-      background-color: var(--card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 1rem;
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-    }
-
-    .mapa-nombre {
-      font-size: 1rem;
-      font-weight: 600;
-    }
-
-    .mapa-rol {
-      font-size: 0.75rem;
-      color: var(--muted-foreground);
-    }
-
-    .mapa-field {
-      display: flex;
-      flex-direction: column;
-      gap: 0.25rem;
-    }
-
-    .mapa-field-label {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.7rem;
-      color: var(--primary);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-
-    .mapa-field-value {
-      font-size: 0.75rem;
-      color: var(--foreground);
-    }
-
-    .mapa-chips {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-    }
-
-    .mapa-chip {
-      background-color: var(--accent);
-      padding: 0.25rem 0.5rem;
-      border-radius: var(--radius);
-      font-size: 0.7rem;
-      border: 1px solid var(--border);
-    }
-
-    .mapa-botones {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
-      gap: 0.5rem;
-      margin-top: 1rem;
-    }
-
-    .mapa-btn {
-      padding: 0.5rem;
-      border: 1px solid var(--border);
-      background-color: transparent;
-      color: var(--muted-foreground);
-      border-radius: var(--radius);
-      cursor: pointer;
-      font-size: 0.75rem;
-      transition: all 0.2s ease-out;
-    }
-
-    .mapa-btn:hover {
-      border-color: var(--primary);
-      color: var(--primary);
-    }
-
-    .mapa-btn.active {
-      background-color: var(--primary);
-      color: var(--primary-foreground);
-      border-color: var(--primary);
-    }
-
     /* ===== COMMS ===== */
-    .comms-controls {
-      display: flex;
-      gap: 1rem;
-      margin-bottom: 1.5rem;
-      flex-wrap: wrap;
-    }
-
-    .comms-search {
-      flex: 1;
-      min-width: 200px;
-      background-color: var(--card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 0.5rem 0.75rem;
-      color: var(--foreground);
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.875rem;
-    }
-
-    .comms-search::placeholder {
-      color: var(--muted-foreground);
-    }
-
-    .comms-filters {
-      display: flex;
-      gap: 0.5rem;
-      flex-wrap: wrap;
-    }
-
-    .comms-filter-btn {
-      padding: 0.4rem 0.75rem;
-      border: 1px solid var(--border);
-      background-color: transparent;
-      color: var(--muted-foreground);
-      border-radius: var(--radius);
-      cursor: pointer;
-      font-size: 0.75rem;
-      transition: all 0.2s ease-out;
-    }
-
-    .comms-filter-btn:hover {
-      border-color: var(--primary);
-      color: var(--primary);
-    }
-
-    .comms-filter-btn.active {
-      background-color: var(--primary);
-      color: var(--primary-foreground);
-      border-color: var(--primary);
-    }
-
     .comms-table {
       width: 100%;
       border-collapse: collapse;
@@ -1166,18 +480,6 @@
 
     html[data-theme="light"] .comms-table tbody tr:hover {
       background-color: oklch(0.96 0.001 0 / 0.5);
-    }
-
-    .comms-tel {
-      color: var(--primary);
-      text-decoration: none;
-      cursor: pointer;
-      font-weight: 600;
-      transition: all 0.2s ease-out;
-    }
-
-    .comms-tel:hover {
-      text-decoration: underline;
     }
 
     .comms-counter {
@@ -1240,18 +542,6 @@
       .sidebar {
         width: 14rem;
       }
-
-      .foco-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .mapa-container {
-        grid-template-columns: 1fr;
-      }
-
-      .timeline-filters {
-        grid-template-columns: 1fr;
-      }
     }
 
     @media (max-width: 768px) {
@@ -1295,18 +585,6 @@
         grid-template-columns: repeat(2, 1fr);
       }
 
-      .foco-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .mapa-container {
-        grid-template-columns: 1fr;
-      }
-
-      .timeline-filters {
-        grid-template-columns: 1fr;
-      }
-
       .comms-table {
         font-size: 0.75rem;
       }
@@ -1329,15 +607,36 @@
       .reloj-hora {
         font-size: 1.75rem;
       }
+    }
 
-      .simulation-controls {
-        flex-direction: column;
-        gap: 0.75rem;
-      }
+    .debug-log {
+      background-color: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1rem;
+      margin-top: 1rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      max-height: 200px;
+      overflow-y: auto;
+      color: var(--muted-foreground);
+    }
 
-      .sim-slider {
-        width: 100%;
-      }
+    .debug-log-entry {
+      margin: 0.25rem 0;
+      padding: 0.25rem;
+    }
+
+    .debug-log-entry.success {
+      color: #22c55e;
+    }
+
+    .debug-log-entry.error {
+      color: #ef4444;
+    }
+
+    .debug-log-entry.info {
+      color: var(--primary);
     }
   </style>
 </head>
@@ -1354,22 +653,18 @@
       </div>
 
       <div class="sidebar-nav">
-        <div class="nav-item active" data-section="kpis">Panel de Control</div>
-        <div class="nav-item" data-section="timeline">Línea del Tiempo</div>
-        <div class="nav-item" data-section="alertas">Focos Rojos</div>
-        <div class="nav-item" data-section="mapa">Dispersión Logística</div>
-        <div class="nav-item" data-section="comms">Comunicaciones</div>
-        <div class="nav-item" data-section="incidencias">Incidencias Estadio</div>
+        <div class="nav-item active" data-section="incidencias">Incidencias Estadio</div>
         <div class="nav-item" data-section="fuerza">Estado de Fuerza</div>
+        <div class="nav-item" data-section="itinerario">Itinerario</div>
       </div>
 
       <div class="sidebar-footer">
         <div class="estado-chip" id="estadoChip">
-          Pre-Partido
+          Monitoreando
         </div>
         <div class="monitoreo-label">
           <span class="live-dot"></span>
-          Monitoreo en tiempo real
+          Tiempo real
         </div>
       </div>
     </div>
@@ -1391,169 +686,17 @@
             <span id="statusText">Monitoreando</span>
           </div>
           <button class="theme-btn" id="themeBtn">☀️ VISTA</button>
+          <button class="theme-btn" id="updateBtn" style="background-color: var(--primary); color: var(--primary-foreground);">🔄 ACTUALIZAR</button>
         </div>
         <div class="reloj">
-          <div class="reloj-hora"><span id="relojHora">19:00</span>:<span id="relojSegundos">00</span></div>
+          <div class="reloj-hora"><span id="relojHora">18:00</span>:<span id="relojSegundos">00</span></div>
           <div class="reloj-label">HORA DEL SISTEMA · 24H</div>
         </div>
       </div>
 
       <!-- CONTENT -->
       <div class="content">
-        <!-- SECTION: KPIs -->
-        <div class="section" id="kpis">
-          <div class="section-title">Panel de Control</div>
-
-          <div class="kpi-container">
-            <div class="kpi-card corner-brackets">
-              <div class="kpi-label">Delegaciones Activas</div>
-              <div class="kpi-value">8</div>
-              <div class="kpi-status">Comitivas simultáneas</div>
-            </div>
-            <div class="kpi-card corner-brackets">
-              <div class="kpi-label">Estatus del Estadio</div>
-              <div class="kpi-value" id="kpiEstatus">Pre-Partido</div>
-              <div class="kpi-status">México vs. Corea</div>
-            </div>
-            <div class="kpi-card corner-brackets">
-              <div class="kpi-label">Alertas de Seguridad</div>
-              <div class="kpi-value" id="kpiAlertas">0</div>
-              <div class="kpi-status">Focos rojos en curso</div>
-            </div>
-            <div class="kpi-card corner-brackets">
-              <div class="kpi-label">Arribos / Salidas Aéreas</div>
-              <div class="kpi-value">3 / 1</div>
-              <div class="kpi-status">Vuelos de la jornada</div>
-            </div>
-          </div>
-
-          <div class="simulation-controls">
-            <button class="sim-button" id="simButton">▶ SIMULAR JORNADA</button>
-            <input type="range" class="sim-slider" id="simSlider" min="80" max="1455" value="1140">
-            <div class="sim-time" id="simTime">19:00</div>
-          </div>
-
-          <div class="foco-grid">
-            <div class="foco-ahora corner-brackets scan-line">
-              <div class="foco-ahora-label">Ahora</div>
-              <div class="foco-ahora-content" id="focoAhoraContent">
-                <div class="foco-hora" id="focoHora">19:00</div>
-                <div class="foco-titulo" id="focoTitulo">Cargando...</div>
-                <div class="foco-ubicacion" id="focoUbicacion"></div>
-                <div class="foco-chip" id="focoChip" style="background-color: #f5a524; color: #000; border-color: #f5a524;"></div>
-              </div>
-              <div class="avance-bar">
-                <div class="avance-fill" id="avanceFill" style="width: 78%;"></div>
-              </div>
-              <div class="avance-label">01:20 inicio · 12:15 (19-jun) cierre de jornada</div>
-            </div>
-
-            <div class="proximos-30">
-              <div class="proximos-label">Próximos 30 Minutos</div>
-              <div class="proximos-list" id="proximosList">
-                <!-- Se llena con JS -->
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- SECTION: ALERTAS -->
-        <div class="section" id="alertas">
-          <div class="section-title">Focos Rojos · Logística Crítica</div>
-          <div class="alertas-container" id="alertasContainer">
-            <!-- Se llena con JS -->
-          </div>
-        </div>
-
-        <!-- SECTION: TIMELINE -->
-        <div class="section" id="timeline">
-          <div class="section-title">Línea del Tiempo · LIVE</div>
-
-          <div class="timeline-filters">
-            <div class="filter-group">
-              <div class="filter-label">Fecha</div>
-              <div class="filter-buttons" id="fechaFilter">
-                <button class="filter-btn active" data-fecha="18Jun">18 Junio</button>
-                <button class="filter-btn" data-fecha="19Jun">19 Junio</button>
-              </div>
-            </div>
-
-            <div class="filter-group">
-              <div class="filter-label">Bloque Horario</div>
-              <div class="filter-buttons" id="bloqueFilter">
-                <button class="filter-btn active" data-bloque="todos">Jornada Completa</button>
-                <button class="filter-btn" data-bloque="madrugada">Madrugada/Mañana</button>
-                <button class="filter-btn" data-bloque="vespertino">Vespertino</button>
-                <button class="filter-btn" data-bloque="nocturno">Post-Partido/Nocturno</button>
-              </div>
-            </div>
-
-            <div class="filter-group">
-              <div class="filter-label">Comitiva / Delegación</div>
-              <div class="filter-buttons" id="delegacionFilter">
-                <button class="filter-btn active" data-delegacion="todos">Todas las Comitivas</button>
-              </div>
-            </div>
-          </div>
-
-          <div class="timeline-list" id="timelineList">
-            <!-- Se llena con JS -->
-          </div>
-
-          <div class="timeline-counter" id="timelineCounter">Hitos: 0</div>
-        </div>
-
-        <!-- SECTION: MAPA -->
-        <div class="section" id="mapa">
-          <div class="section-title">Dispersión Logística · 5 Puntos Neurálgicos</div>
-
-          <div class="mapa-container">
-            <div class="mapa-visual" id="mapaVisual">
-              <!-- Marcadores se generan con JS -->
-            </div>
-            <div class="mapa-panel" id="mapaPanel">
-              <div class="mapa-nombre" id="mapaNombre">Selecciona un punto</div>
-              <div class="mapa-rol" id="mapaRol"></div>
-              <div id="mapaPanelContent"></div>
-            </div>
-          </div>
-
-          <div class="mapa-botones" id="mapaBotones">
-            <!-- Se llena con JS -->
-          </div>
-        </div>
-
-        <!-- SECTION: COMMS -->
-        <div class="section" id="comms">
-          <div class="section-title">Comunicaciones Operativas · Cápsulas Especiales</div>
-
-          <div class="comms-controls">
-            <input type="text" class="comms-search" id="commsSearch" placeholder="Buscar por chofer, unidad, placa o vehículo...">
-            <div class="comms-filters" id="commsFilters">
-              <button class="comms-filter-btn active" data-comitiva="todos">Todas</button>
-            </div>
-          </div>
-
-          <table class="comms-table">
-            <thead>
-              <tr>
-                <th>Unidad</th>
-                <th>Vehículo</th>
-                <th>Placa</th>
-                <th>Chofer</th>
-                <th>Comitiva</th>
-                <th>Contacto</th>
-              </tr>
-            </thead>
-            <tbody id="commsTbody">
-              <!-- Se llena con JS -->
-            </tbody>
-          </table>
-
-          <div class="comms-counter" id="commsCounter">Unidades: 0</div>
-        </div>
-
-        <!-- SECCIÓN: INCIDENCIAS ESTADIO -->
+        <!-- SECTION: INCIDENCIAS ESTADIO -->
         <div class="section" id="incidencias">
           <div class="section-title">INCIDENCIAS ESTADIO · BITÁCORA TÁCTICA</div>
           <div style="display: flex; gap: 1rem; margin-bottom: 1rem;">
@@ -1561,33 +704,23 @@
               <div class="kpi-label">TOTAL INCIDENCIAS</div>
               <div class="kpi-value" id="totIncidencias">0</div>
             </div>
-            <div class="kpi-card" style="flex: 1;">
-              <div class="kpi-label">SEVERIDAD ALTA</div>
-              <div class="kpi-value" id="totAltas">0</div>
-            </div>
-            <div class="kpi-card" style="flex: 1;">
-              <div class="kpi-label">SEVERIDAD MEDIA</div>
-              <div class="kpi-value" id="totMedias">0</div>
-            </div>
           </div>
           <div style="background-color: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; overflow-y: auto; max-height: 400px;">
             <table class="comms-table" style="margin: 0;">
               <thead>
                 <tr>
                   <th>Hora</th>
-                  <th>Descripción</th>
-                  <th>Severidad</th>
-                  <th>Estatus</th>
-                  <th>Ubicación</th>
+                  <th>Incidente</th>
                 </tr>
               </thead>
               <tbody id="incidenciasTbody">
               </tbody>
             </table>
           </div>
+          <div id="debugIncidencias" class="debug-log" style="display: none;"></div>
         </div>
 
-        <!-- SECCIÓN: ESTADO DE FUERZA -->
+        <!-- SECTION: ESTADO DE FUERZA -->
         <div class="section" id="fuerza">
           <div class="section-title">ESTADO DE FUERZA · DESPLIEGUE OPERATIVO</div>
           <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem;">
@@ -1612,6 +745,27 @@
               </div>
             </div>
           </div>
+          <div id="debugFuerza" class="debug-log" style="display: none;"></div>
+        </div>
+
+        <!-- SECTION: ITINERARIO -->
+        <div class="section" id="itinerario">
+          <div class="section-title">ITINERARIO · LÍNEA DEL TIEMPO</div>
+          <div style="background-color: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; overflow-y: auto; max-height: 500px;">
+            <table class="comms-table" style="margin: 0;">
+              <thead>
+                <tr>
+                  <th>Fecha</th>
+                  <th>Hora</th>
+                  <th>Misión</th>
+                  <th>Actividad</th>
+                </tr>
+              </thead>
+              <tbody id="itinerarioTbody">
+              </tbody>
+            </table>
+          </div>
+          <div id="debugItinerario" class="debug-log" style="display: none;"></div>
         </div>
 
         <!-- FOOTER -->
@@ -1625,13 +779,9 @@
   <!-- MOBILE NAV -->
   <div class="mobile-nav">
     <div class="mobile-nav-items">
-      <div class="mobile-nav-item active" data-section="kpis">Control</div>
-      <div class="mobile-nav-item" data-section="timeline">Tiempo</div>
-      <div class="mobile-nav-item" data-section="alertas">Focos</div>
-      <div class="mobile-nav-item" data-section="mapa">Mapa</div>
-      <div class="mobile-nav-item" data-section="comms">Comms</div>
-      <div class="mobile-nav-item" data-section="incidencias">Incidencias</div>
+      <div class="mobile-nav-item active" data-section="incidencias">Incidencias</div>
       <div class="mobile-nav-item" data-section="fuerza">Fuerza</div>
+      <div class="mobile-nav-item" data-section="itinerario">Itinerario</div>
     </div>
   </div>
 
@@ -1639,241 +789,179 @@
     // ===== CONFIGURACIÓN GLOBAL =====
     const GOOGLE_SHEET_ID = '1KJGLdPsR108T5fdkXgqYLwFPu8jb1mC8DZXdTJTotms';
     const POLLING_INTERVAL = 30000; // 30 segundos
-    const FECHA_SELECCIONADA = '18Jun'; // Se actualizará dinámicamente
+    const DEBUG_MODE = true; // Cambiar a false para desactivar logs
 
     // ===== ESTADO GLOBAL =====
     const state = {
       incidentes: [],
       edoFuerza: [],
       itinerario: [],
-      fechaActual: FECHA_SELECCIONADA,
-      filtros: {
-        fecha: FECHA_SELECCIONADA,
-        bloque: 'todos',
-        delegacion: 'todos',
-        severidad: 'todos'
-      },
       ultimaActualizacion: null,
-      estadoConexion: 'monitoreando' // 'monitoreando', 'actualizando', 'error'
+      estadoConexion: 'monitoreando'
     };
 
-    // ===== DATOS ESTÁTICOS (Hoteles, Contactos, Delegaciones, etc.) =====
-    const DELEGACIONES = [
-      { id: "col", nombre: "Colombia", emoji: "🇨🇴" },
-      { id: "kor", nombre: "Corea", emoji: "🇰🇷" },
-      { id: "mex", nombre: "México", emoji: "🇲🇽" },
-      { id: "arb", nombre: "Árbitros", emoji: "🏁" },
-      { id: "tro", nombre: "Trofeo", emoji: "🏆" },
-      { id: "sg", nombre: "Sec. General FIFA", emoji: "🎩" },
-      { id: "ley", nombre: "Leyendas", emoji: "👑" },
-      { id: "vip", nombre: "VIP / VVIP", emoji: "⭐" },
-    ];
-
-    const SEVERIDAD = {
-      Alta: { label: "Alta", color: "#ef4444" },
-      Media: { label: "Media", color: "#eab308" },
-      Baja: { label: "Baja", color: "#22c55e" },
-      air: { label: "Arribos / Salidas Aéreas", color: "#f97316" },
-      team: { label: "Traslados de Equipos / Cápsulas", color: "#3b82f6" },
-      sweep: { label: "Barridos Canino y Electrónico", color: "#eab308" },
-      pos: { label: "Convoys / En Posición", color: "#22c55e" },
-      vip: { label: "Movimientos VIP / VVIP / FIFA", color: "#a855f7" },
+    // ===== SISTEMA DE LOGGING =====
+    const debugLogs = {
+      incidencias: [],
+      fuerza: [],
+      itinerario: []
     };
 
-    const BLOQUES = {
-      madrugada: { label: "Madrugada / Mañana", rango: "01:20 – 11:59" },
-      vespertino: { label: "Vespertino", rango: "12:00 – 18:59" },
-      nocturno: { label: "Post-Partido / Nocturno", rango: "19:00 en adelante" },
-    };
+    function addDebugLog(section, message, type = 'info') {
+      const timestamp = new Date().toLocaleTimeString();
+      const entry = `[${timestamp}] ${message}`;
+      
+      if (debugLogs[section]) {
+        debugLogs[section].push({ message: entry, type });
+        if (debugLogs[section].length > 20) debugLogs[section].shift();
+      }
 
-    const HOTELES = [
-      { id: 1, nombre: "Hotel Grand Fiesta Americana", rol: "Delegación Colombia", x: "35%", y: "40%", color: "#3b82f6" },
-      { id: 2, nombre: "Hotel Hyatt Regency Andares", rol: "Trofeo Copa del Mundo", x: "55%", y: "50%", color: "#a855f7" },
-      { id: 3, nombre: "Hotel Westin", rol: "Delegación Corea", x: "45%", y: "60%", color: "#ec4899" },
-      { id: 4, nombre: "Hotel Hilton Midtown", rol: "Delegación México", x: "65%", y: "35%", color: "#10b981" },
-      { id: 5, nombre: "Estadio Guadalajara", rol: "Punto Central", x: "50%", y: "45%", color: "#f59e0b" },
-    ];
+      console.log(`[${section.toUpperCase()}] ${entry}`);
+      
+      if (DEBUG_MODE) {
+        updateDebugDisplay(section);
+      }
+    }
 
-    const CONTACTOS = [
-      { unidad: "U-001", vehiculo: "Suburban", placa: "80G830", chofer: "Cristian B. Jiménez", comitiva: "VIP", contacto: "3338097310" },
-      { unidad: "U-002", vehiculo: "Sprinter", placa: "80G831", chofer: "Juan Pérez García", comitiva: "Colombia", contacto: "3338097311" },
-      { unidad: "U-003", vehiculo: "Autobús", placa: "80G832", chofer: "María López Rodríguez", comitiva: "Corea", contacto: "3338097312" },
-      { unidad: "U-004", vehiculo: "SUV", placa: "80G833", chofer: "Carlos Mendoza", comitiva: "México", contacto: "3338097313" },
-      { unidad: "U-005", vehiculo: "Pickup", placa: "80G834", chofer: "Roberto Sánchez", comitiva: "Seguridad", contacto: "3338097314" },
-    ];
+    function updateDebugDisplay(section) {
+      const debugEl = document.getElementById(`debug${section.charAt(0).toUpperCase() + section.slice(1)}`);
+      if (debugEl && debugLogs[section]) {
+        debugEl.innerHTML = debugLogs[section]
+          .map(log => `<div class="debug-log-entry ${log.type}">${log.message}</div>`)
+          .join('');
+      }
+    }
 
-    // ===== FUNCIONES DE FETCHING DINÁMICO =====
+    // ===== FUNCIONES DE FETCHING =====
 
-    /**
-     * Construye la URL de exportación CSV desde Google Sheets
-     * @param {string} sheetName - Nombre de la pestaña (ej: "Incidentes 18Jun")
-     * @returns {string} URL de exportación
-     */
     function construirURLCSV(sheetName) {
       return `https://docs.google.com/spreadsheets/d/${GOOGLE_SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(sheetName)}`;
     }
 
-    /**
-     * Calcula el hash de un arreglo para detectar cambios
-     * @param {array} data - Datos a hashear
-     * @returns {string} Hash simple
-     */
-    function calcularHash(data) {
-      return JSON.stringify(data).split('').reduce((a, b) => {
-        a = ((a << 5) - a) + b.charCodeAt(0);
-        return a & a;
-      }, 0).toString();
-    }
-
-    /**
-     * Fetch dinámico de datos desde Google Sheets
-     * @param {string} sheetName - Nombre de la pestaña
-     * @returns {Promise<array>} Datos parseados del CSV
-     */
     async function fetchDatosDesdeGoogleSheets(sheetName) {
       try {
+        addDebugLog('incidencias', `Iniciando fetch de ${sheetName}...`, 'info');
         const url = construirURLCSV(sheetName);
+        
         const response = await fetch(url);
-
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
 
         const csvText = await response.text();
+        addDebugLog('incidencias', `CSV recibido: ${csvText.length} caracteres`, 'success');
 
-        // Usar PapaParse para parseo robusto del CSV
         return new Promise((resolve, reject) => {
           Papa.parse(csvText, {
             header: true,
             skipEmptyLines: true,
             complete: (results) => {
+              addDebugLog('incidencias', `Parseado: ${results.data.length} filas`, 'success');
               resolve(results.data);
             },
             error: (error) => {
+              addDebugLog('incidencias', `Error parseando CSV: ${error.message}`, 'error');
               reject(error);
             }
           });
         });
       } catch (error) {
-        console.error(`Error fetching ${sheetName}:`, error);
-        mostrarNotificacion(`Error cargando ${sheetName}`, 'error');
+        addDebugLog('incidencias', `Error fetching ${sheetName}: ${error.message}`, 'error');
         return [];
       }
     }
 
+    // ===== PROCESADORES DE DATOS ADAPTADOS A ESTRUCTURA REAL =====
+
     /**
-     * Procesa y valida datos de incidentes desde CSV
-     * @param {array} rawData - Datos crudos del CSV
-     * @returns {array} Datos procesados
+     * Procesa incidentes desde CSV con estructura: Hora, Incidente
      */
     function procesarIncidentes(rawData) {
-      return rawData
-        .filter(row => row.hora && row.descripcion)
+      addDebugLog('incidencias', `Procesando ${rawData.length} filas de incidentes...`, 'info');
+      
+      const procesados = rawData
+        .filter(row => row.Hora && row.Incidente)
         .map(row => ({
-          hora: String(row.hora || '').trim(),
-          descripcion: String(row.descripcion || '').trim(),
-          severidad: String(row.severidad || 'Baja').trim(),
-          estatus: String(row.estatus || 'En Proceso').trim(),
-          ubicacion: String(row.ubicacion || '').trim()
+          hora: String(row.Hora || '').trim(),
+          incidente: String(row.Incidente || '').trim()
         }));
+
+      addDebugLog('incidencias', `${procesados.length} incidentes válidos`, 'success');
+      return procesados;
     }
 
     /**
-     * Procesa y valida datos de estado de fuerza desde CSV
-     * @param {array} rawData - Datos crudos del CSV
-     * @returns {array} Datos procesados
+     * Procesa estado de fuerza desde CSV con estructura: Corporacion, Mando, Personal, Vehiculos
      */
     function procesarEdoFuerza(rawData) {
-      return rawData
-        .filter(row => row.corporacion)
+      addDebugLog('fuerza', `Procesando ${rawData.length} filas de fuerza...`, 'info');
+      
+      const procesados = rawData
+        .filter(row => row.Corporacion)
         .map(row => ({
-          corporacion: String(row.corporacion || '').trim(),
-          mando: String(row.mando || '').trim(),
-          personal: parseInt(row.personal) || 0,
-          vehiculos: String(row.vehiculos || '').trim()
+          corporacion: String(row.Corporacion || '').trim(),
+          mando: String(row.Mando || '').trim(),
+          personal: parseInt(row.Personal) || 0,
+          vehiculos: String(row.Vehiculos || '').trim()
         }));
+
+      addDebugLog('fuerza', `${procesados.length} corporaciones válidas`, 'success');
+      return procesados;
     }
 
     /**
-     * Procesa y valida datos de itinerario desde CSV
-     * @param {array} rawData - Datos crudos del CSV
-     * @returns {array} Datos procesados
+     * Procesa itinerario desde CSV con estructura: Fecha, Hora, Misión, Actividad
      */
     function procesarItinerario(rawData) {
-      return rawData
-        .filter(row => row.hora && row.titulo)
+      addDebugLog('itinerario', `Procesando ${rawData.length} filas de itinerario...`, 'info');
+      
+      const procesados = rawData
+        .filter(row => row.Fecha && row.Hora)
         .map(row => ({
-          id: String(row.id || '').trim(),
-          hora: String(row.hora || '').trim(),
-          bloque: String(row.bloque || 'vespertino').trim(),
-          delegacionId: String(row.delegacionId || 'vip').trim(),
-          emoji: String(row.emoji || '📍').trim(),
-          titulo: String(row.titulo || '').trim(),
-          ubicacion: String(row.ubicacion || '').trim(),
-          severidad: String(row.severidad || 'pos').trim(),
-          ruta: String(row.ruta || '').trim(),
-          autos: String(row.autos || '').trim(),
-          seguridad: String(row.seguridad || '').trim(),
-          responsable: String(row.responsable || '').trim(),
-          nota: String(row.nota || '').trim()
+          fecha: String(row.Fecha || '').trim(),
+          hora: String(row.Hora || '').trim(),
+          mision: String(row.Misión || '').trim(),
+          actividad: String(row.Actividad || '').trim()
         }));
+
+      addDebugLog('itinerario', `${procesados.length} eventos válidos`, 'success');
+      return procesados;
     }
 
-    /**
-     * Actualiza el estado global con datos dinámicos desde Google Sheets
-     */
+    // ===== ACTUALIZACIÓN DE DATOS =====
+
     async function actualizarDatosDinamicos() {
       state.estadoConexion = 'actualizando';
       actualizarIndicadorEstado();
 
       try {
-        // Fetch de las tres pestañas principales
+        addDebugLog('incidencias', 'Iniciando actualización de datos...', 'info');
+
         const [incidentesRaw, edoFuerzaRaw, itinerarioRaw] = await Promise.all([
-          fetchDatosDesdeGoogleSheets(`Incidentes ${state.fechaActual}`),
-          fetchDatosDesdeGoogleSheets(`EdoFuerza ${state.fechaActual}`),
+          fetchDatosDesdeGoogleSheets('Incidentes 18Jun'),
+          fetchDatosDesdeGoogleSheets('EdoFuerza 18Jun'),
           fetchDatosDesdeGoogleSheets('Itinerario')
         ]);
 
-        // Procesar y validar datos
-        const incidentesNuevos = procesarIncidentes(incidentesRaw);
-        const edoFuerzaNueva = procesarEdoFuerza(edoFuerzaRaw);
-        const itinerarioNuevo = procesarItinerario(itinerarioRaw);
+        state.incidentes = procesarIncidentes(incidentesRaw);
+        state.edoFuerza = procesarEdoFuerza(edoFuerzaRaw);
+        state.itinerario = procesarItinerario(itinerarioRaw);
 
-        // Comparar hashes para detectar cambios reales
-        const hashIncidentes = calcularHash(incidentesNuevos);
-        const hashFuerza = calcularHash(edoFuerzaNueva);
-        const hashItinerario = calcularHash(itinerarioNuevo);
-
-        const cambios = {
-          incidentes: hashIncidentes !== calcularHash(state.incidentes),
-          fuerza: hashFuerza !== calcularHash(state.edoFuerza),
-          itinerario: hashItinerario !== calcularHash(state.itinerario)
-        };
-
-        // Actualizar estado solo si hay cambios
-        if (cambios.incidentes) state.incidentes = incidentesNuevos;
-        if (cambios.fuerza) state.edoFuerza = edoFuerzaNueva;
-        if (cambios.itinerario) state.itinerario = itinerarioNuevo;
-
-        // Re-renderizar UI si hay cambios
-        if (Object.values(cambios).some(v => v)) {
-          renderizarUI();
-        }
+        renderizarUI();
 
         state.ultimaActualizacion = new Date();
         state.estadoConexion = 'monitoreando';
         actualizarIndicadorEstado();
 
+        addDebugLog('incidencias', 'Actualización completada', 'success');
+
       } catch (error) {
-        console.error('Error actualizando datos dinámicos:', error);
+        addDebugLog('incidencias', `Error en actualización: ${error.message}`, 'error');
         state.estadoConexion = 'error';
         actualizarIndicadorEstado();
       }
     }
 
-    /**
-     * Actualiza el indicador visual de estado de conexión
-     */
     function actualizarIndicadorEstado() {
       const indicator = document.getElementById('statusIndicator');
       const statusText = document.getElementById('statusText');
@@ -1883,7 +971,6 @@
         statusText.textContent = 'Monitoreando';
       } else if (state.estadoConexion === 'actualizando') {
         indicator.className = 'status-indicator';
-        indicator.style.animation = 'none';
         statusText.textContent = 'Actualizando...';
       } else if (state.estadoConexion === 'error') {
         indicator.className = 'status-indicator error';
@@ -1891,64 +978,28 @@
       }
     }
 
-    /**
-     * Muestra notificaciones visuales no intrusivas
-     * @param {string} mensaje - Mensaje a mostrar
-     * @param {string} tipo - 'success', 'error', 'info'
-     */
-    function mostrarNotificacion(mensaje, tipo = 'info') {
-      console.log(`[${tipo.toUpperCase()}] ${mensaje}`);
-      // Implementar toast visual si es necesario
-    }
-
     // ===== FUNCIONES DE RENDERIZADO =====
 
-    /**
-     * Renderiza la sección de incidencias
-     */
     function renderIncidencias() {
       const tbody = document.getElementById('incidenciasTbody');
       const totIncidencias = document.getElementById('totIncidencias');
-      const totAltas = document.getElementById('totAltas');
-      const totMedias = document.getElementById('totMedias');
 
       if (!state.incidentes || state.incidentes.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--muted-foreground);">Sin incidencias registradas</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="2" style="text-align: center; color: var(--muted-foreground);">Sin incidencias registradas</td></tr>';
         totIncidencias.textContent = '0';
-        totAltas.textContent = '0';
-        totMedias.textContent = '0';
         return;
       }
 
-      // Contar severidades
-      const contadores = {
-        total: state.incidentes.length,
-        altas: state.incidentes.filter(i => i.severidad === 'Alta').length,
-        medias: state.incidentes.filter(i => i.severidad === 'Media').length
-      };
+      totIncidencias.textContent = state.incidentes.length.toLocaleString();
 
-      totIncidencias.textContent = contadores.total.toLocaleString();
-      totAltas.textContent = contadores.altas.toLocaleString();
-      totMedias.textContent = contadores.medias.toLocaleString();
-
-      // Renderizar tabla
-      tbody.innerHTML = state.incidentes.map(inc => {
-        const colorSeveridad = SEVERIDAD[inc.severidad]?.color || '#666';
-        return `
-          <tr>
-            <td><strong>${inc.hora}</strong></td>
-            <td>${inc.descripcion}</td>
-            <td><span style="color: ${colorSeveridad}; font-weight: 600;">●</span> ${inc.severidad}</td>
-            <td>${inc.estatus}</td>
-            <td>${inc.ubicacion}</td>
-          </tr>
-        `;
-      }).join('');
+      tbody.innerHTML = state.incidentes.map(inc => `
+        <tr>
+          <td><strong>${inc.hora}</strong></td>
+          <td>${inc.incidente}</td>
+        </tr>
+      `).join('');
     }
 
-    /**
-     * Renderiza la sección de estado de fuerza
-     */
     function renderEdoFuerza() {
       const chartFuerza = document.getElementById('chartFuerza');
       const listFuerza = document.getElementById('listFuerza');
@@ -1963,7 +1014,6 @@
         return;
       }
 
-      // Calcular totales
       const totalPersonal = state.edoFuerza.reduce((sum, f) => sum + f.personal, 0);
       const totalCorps = state.edoFuerza.length;
 
@@ -2004,154 +1054,32 @@
       `).join('');
     }
 
-    /**
-     * Renderiza la sección de itinerario/timeline
-     */
-    function renderTimeline() {
-      const timelineList = document.getElementById('timelineList');
-      const timelineCounter = document.getElementById('timelineCounter');
+    function renderItinerario() {
+      const tbody = document.getElementById('itinerarioTbody');
 
       if (!state.itinerario || state.itinerario.length === 0) {
-        timelineList.innerHTML = '<p style="color: var(--muted-foreground); padding: 2rem; text-align: center;">Sin hitos registrados</p>';
-        timelineCounter.textContent = 'Hitos: 0';
+        tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: var(--muted-foreground);">Sin eventos registrados</td></tr>';
         return;
       }
 
-      // Filtrar según criterios
-      let filtered = state.itinerario.filter(hito => {
-        const cumpleBloque = state.filtros.bloque === 'todos' || hito.bloque === state.filtros.bloque;
-        const cumpleDelegacion = state.filtros.delegacion === 'todos' || hito.delegacionId === state.filtros.delegacion;
-        return cumpleBloque && cumpleDelegacion;
-      });
-
-      timelineCounter.textContent = `Hitos: ${filtered.length}`;
-
-      timelineList.innerHTML = filtered.map(hito => {
-        const delegacion = DELEGACIONES.find(d => d.id === hito.delegacionId);
-        const colorSeveridad = SEVERIDAD[hito.severidad]?.color || '#666';
-
-        return `
-          <div class="timeline-item futuro">
-            <div class="timeline-node" style="border-color: ${colorSeveridad}; background-color: ${colorSeveridad}20;">
-              ${hito.emoji}
-            </div>
-            <div class="timeline-content">
-              <div class="timeline-info">
-                <div class="timeline-hora">${hito.hora}</div>
-                <div class="timeline-titulo">${hito.titulo}</div>
-                <div class="timeline-delegacion">${delegacion?.nombre || hito.delegacionId} · ${hito.ubicacion}</div>
-              </div>
-              <div class="timeline-chip" style="background-color: ${colorSeveridad}20; color: ${colorSeveridad}; border-color: ${colorSeveridad};">
-                ${SEVERIDAD[hito.severidad]?.label || hito.severidad}
-              </div>
-            </div>
-          </div>
-        `;
-      }).join('');
-    }
-
-    /**
-     * Renderiza la sección de mapa
-     */
-    function renderMapa() {
-      const mapaVisual = document.getElementById('mapaVisual');
-      const mapaBotones = document.getElementById('mapaBotones');
-
-      // Limpiar marcadores previos
-      mapaVisual.querySelectorAll('.marcador').forEach(m => m.remove());
-
-      // Crear marcadores para cada hotel
-      HOTELES.forEach(hotel => {
-        const marcador = document.createElement('div');
-        marcador.className = 'marcador';
-        marcador.style.left = hotel.x;
-        marcador.style.top = hotel.y;
-        marcador.style.borderColor = hotel.color;
-        marcador.style.backgroundColor = `${hotel.color}20`;
-        marcador.textContent = '📍';
-        marcador.onclick = () => mostrarDetalleHotel(hotel);
-        mapaVisual.appendChild(marcador);
-      });
-
-      // Botones de hoteles
-      mapaBotones.innerHTML = HOTELES.map(hotel => `
-        <button class="mapa-btn" onclick="mostrarDetalleHotel({id: ${hotel.id}, nombre: '${hotel.nombre}', rol: '${hotel.rol}', color: '${hotel.color}'})">
-          ${hotel.nombre.split(' ')[0]}
-        </button>
-      `).join('');
-    }
-
-    /**
-     * Muestra detalles de un hotel en el panel lateral del mapa
-     * @param {object} hotel - Datos del hotel
-     */
-    function mostrarDetalleHotel(hotel) {
-      const mapaNombre = document.getElementById('mapaNombre');
-      const mapaRol = document.getElementById('mapaRol');
-      const mapaPanelContent = document.getElementById('mapaPanelContent');
-
-      mapaNombre.textContent = hotel.nombre;
-      mapaRol.textContent = hotel.rol;
-
-      mapaPanelContent.innerHTML = `
-        <div class="mapa-field">
-          <div class="mapa-field-label">Estado</div>
-          <div class="mapa-field-value">Operativo</div>
-        </div>
-        <div class="mapa-field">
-          <div class="mapa-field-label">Contacto</div>
-          <div class="mapa-field-value">+52 (33) 3809-7310</div>
-        </div>
-        <div class="mapa-chips">
-          <div class="mapa-chip">En Línea</div>
-          <div class="mapa-chip">Seguro</div>
-        </div>
-      `;
-    }
-
-    /**
-     * Renderiza la sección de comunicaciones
-     */
-    function renderComms() {
-      const commsTbody = document.getElementById('commsTbody');
-      const commsCounter = document.getElementById('commsCounter');
-
-      if (!CONTACTOS || CONTACTOS.length === 0) {
-        commsTbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: var(--muted-foreground);">Sin unidades registradas</td></tr>';
-        commsCounter.textContent = 'Unidades: 0';
-        return;
-      }
-
-      commsCounter.textContent = `Unidades: ${CONTACTOS.length}`;
-
-      commsTbody.innerHTML = CONTACTOS.map(contacto => `
+      tbody.innerHTML = state.itinerario.map(evt => `
         <tr>
-          <td><strong>${contacto.unidad}</strong></td>
-          <td>${contacto.vehiculo}</td>
-          <td>${contacto.placa}</td>
-          <td>${contacto.chofer}</td>
-          <td>${contacto.comitiva}</td>
-          <td><a class="comms-tel" href="tel:${contacto.contacto}">${contacto.contacto}</a></td>
+          <td>${evt.fecha}</td>
+          <td><strong>${evt.hora}</strong></td>
+          <td>${evt.mision}</td>
+          <td>${evt.actividad}</td>
         </tr>
       `).join('');
     }
 
-    /**
-     * Renderiza toda la interfaz de usuario
-     */
     function renderizarUI() {
       renderIncidencias();
       renderEdoFuerza();
-      renderTimeline();
-      renderMapa();
-      renderComms();
+      renderItinerario();
     }
 
     // ===== FUNCIONES DE UTILIDAD =====
 
-    /**
-     * Actualiza el reloj del sistema
-     */
     function actualizarReloj() {
       const ahora = new Date();
       const horas = String(ahora.getHours()).padStart(2, '0');
@@ -2162,9 +1090,6 @@
       document.getElementById('relojSegundos').textContent = segundos;
     }
 
-    /**
-     * Alterna entre modo claro y oscuro
-     */
     function alternarTema() {
       const html = document.documentElement;
       const temaActual = html.getAttribute('data-theme') || 'dark';
@@ -2177,9 +1102,6 @@
       btn.textContent = nuevoTema === 'dark' ? '☀️ VISTA' : '🌙 VISTA';
     }
 
-    /**
-     * Carga el tema guardado en localStorage
-     */
     function cargarTemaGuardado() {
       const temaSaved = localStorage.getItem('c5-tema') || 'dark';
       document.documentElement.setAttribute('data-theme', temaSaved);
@@ -2188,12 +1110,7 @@
       btn.textContent = temaSaved === 'dark' ? '☀️ VISTA' : '🌙 VISTA';
     }
 
-    /**
-     * Navega a una sección específica
-     * @param {string} sectionId - ID de la sección
-     */
     function navegarASeccion(sectionId) {
-      // Actualizar nav items activos
       document.querySelectorAll('.nav-item, .mobile-nav-item').forEach(item => {
         item.classList.remove('active');
         if (item.dataset.section === sectionId) {
@@ -2201,7 +1118,6 @@
         }
       });
 
-      // Scroll a la sección
       const section = document.getElementById(sectionId);
       if (section) {
         section.scrollIntoView({ behavior: 'smooth' });
@@ -2210,32 +1126,19 @@
 
     // ===== INICIALIZACIÓN =====
 
-    /**
-     * Inicializa la aplicación
-     */
     async function inicializar() {
       console.log('Inicializando C5 Dashboard...');
 
-      // Cargar tema guardado
       cargarTemaGuardado();
-
-      // Cargar datos iniciales desde Google Sheets
       await actualizarDatosDinamicos();
-
-      // Renderizar UI
-      renderizarUI();
-
-      // Iniciar reloj
       actualizarReloj();
-      setInterval(actualizarReloj, 1000);
 
-      // Iniciar polling automático cada 30 segundos
+      setInterval(actualizarReloj, 1000);
       setInterval(actualizarDatosDinamicos, POLLING_INTERVAL);
 
-      // Event listeners
       document.getElementById('themeBtn').addEventListener('click', alternarTema);
+      document.getElementById('updateBtn').addEventListener('click', actualizarDatosDinamicos);
 
-      // Navegación
       document.querySelectorAll('.nav-item, .mobile-nav-item').forEach(item => {
         item.addEventListener('click', () => {
           const sectionId = item.dataset.section;
@@ -2243,49 +1146,9 @@
         });
       });
 
-      // Filtros de timeline
-      document.querySelectorAll('#fechaFilter .filter-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-          document.querySelectorAll('#fechaFilter .filter-btn').forEach(b => b.classList.remove('active'));
-          btn.classList.add('active');
-          state.filtros.fecha = btn.dataset.fecha;
-          state.fechaActual = btn.dataset.fecha;
-          actualizarDatosDinamicos();
-        });
-      });
-
-      document.querySelectorAll('#bloqueFilter .filter-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-          document.querySelectorAll('#bloqueFilter .filter-btn').forEach(b => b.classList.remove('active'));
-          btn.classList.add('active');
-          state.filtros.bloque = btn.dataset.bloque;
-          renderTimeline();
-        });
-      });
-
-      document.querySelectorAll('#delegacionFilter .filter-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-          document.querySelectorAll('#delegacionFilter .filter-btn').forEach(b => b.classList.remove('active'));
-          btn.classList.add('active');
-          state.filtros.delegacion = btn.dataset.delegacion;
-          renderTimeline();
-        });
-      });
-
-      // Búsqueda en comunicaciones
-      document.getElementById('commsSearch').addEventListener('input', (e) => {
-        const query = e.target.value.toLowerCase();
-        const rows = document.querySelectorAll('#commsTbody tr');
-        rows.forEach(row => {
-          const texto = row.textContent.toLowerCase();
-          row.style.display = texto.includes(query) ? '' : 'none';
-        });
-      });
-
       console.log('C5 Dashboard inicializado correctamente');
     }
 
-    // Iniciar cuando el DOM esté listo
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', inicializar);
     } else {
