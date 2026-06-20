@@ -656,6 +656,7 @@
         <div class="nav-item active" data-section="incidencias">Incidencias Estadio</div>
         <div class="nav-item" data-section="fuerza">Estado de Fuerza</div>
         <div class="nav-item" data-section="itinerario">Itinerario</div>
+        <div class="nav-item" data-section="comunicaciones">Comunicaciones</div>
       </div>
 
       <div class="sidebar-footer">
@@ -768,6 +769,34 @@
           <div id="debugItinerario" class="debug-log" style="display: none;"></div>
         </div>
 
+        <!-- SECTION: COMUNICACIONES OPERATIVAS -->
+        <div class="section" id="comunicaciones">
+          <div class="section-title">COMUNICACIONES OPERATIVAS · CÁPSULAS ESPECIALES</div>
+          <div style="display: flex; gap: 1rem; margin-bottom: 1rem;">
+            <div class="kpi-card" style="flex: 1;">
+              <div class="kpi-label">UNIDADES OPERATIVAS</div>
+              <div class="kpi-value" id="totUnidades">0</div>
+            </div>
+          </div>
+          <div style="background-color: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; overflow-y: auto; max-height: 400px;">
+            <table class="comms-table" style="margin: 0;">
+              <thead>
+                <tr>
+                  <th>Unidad</th>
+                  <th>Vehículo</th>
+                  <th>Placa</th>
+                  <th>Chofer</th>
+                  <th>Comitiva</th>
+                  <th>Contacto</th>
+                </tr>
+              </thead>
+              <tbody id="comunicacionesTbody">
+              </tbody>
+            </table>
+          </div>
+          <div id="debugComunicaciones" class="debug-log" style="display: none;"></div>
+        </div>
+
         <!-- FOOTER -->
         <div class="footer">
           C5 · GDL — PUESTO DE MANDO · CONSOLIDADO OPERATIVO 18 JUN 2026 · USO INTERNO
@@ -782,6 +811,7 @@
       <div class="mobile-nav-item active" data-section="incidencias">Incidencias</div>
       <div class="mobile-nav-item" data-section="fuerza">Fuerza</div>
       <div class="mobile-nav-item" data-section="itinerario">Itinerario</div>
+      <div class="mobile-nav-item" data-section="comunicaciones">Comms</div>
     </div>
   </div>
 
@@ -796,6 +826,7 @@
       incidentes: [],
       edoFuerza: [],
       itinerario: [],
+      operativo: [],
       ultimaActualizacion: null,
       estadoConexion: 'monitoreando'
     };
@@ -804,7 +835,8 @@
     const debugLogs = {
       incidencias: [],
       fuerza: [],
-      itinerario: []
+      itinerario: [],
+      comunicaciones: []
     };
 
     function addDebugLog(section, message, type = 'info') {
@@ -944,6 +976,29 @@
       return procesados;
     }
 
+    function procesarOperativo(rawData) {
+      addDebugLog('comunicaciones', `Procesando ${rawData.length} filas de operativo...`, 'info');
+      
+      if (rawData.length > 0) {
+        const columnasDetectadas = Object.keys(rawData[0]);
+        addDebugLog('comunicaciones', `Columnas detectadas: ${columnasDetectadas.join(', ')}`, 'info');
+      }
+      
+      const procesados = rawData
+        .filter(row => row.Unidad)
+        .map(row => ({
+          unidad: String(row.Unidad || '').trim(),
+          vehiculo: String(row.Vehiculo || '').trim(),
+          placa: String(row.Placa || '').trim(),
+          chofer: String(row.Chofer || '').trim(),
+          comitiva: String(row.Comitiva || '').trim(),
+          contacto: String(row.Contacto || '').trim()
+        }));
+
+      addDebugLog('comunicaciones', `${procesados.length} unidades válidas procesadas`, 'success');
+      return procesados;
+    }
+
     // ===== ACTUALIZACIÓN DE DATOS =====
 
     async function actualizarDatosDinamicos() {
@@ -953,15 +1008,17 @@
       try {
         addDebugLog('incidencias', 'Iniciando actualización de datos...', 'info');
 
-        const [incidentesRaw, edoFuerzaRaw, itinerarioRaw] = await Promise.all([
+        const [incidentesRaw, edoFuerzaRaw, itinerarioRaw, operativoRaw] = await Promise.all([
           fetchDatosDesdeGoogleSheets('Incidentes 18Jun'),
           fetchDatosDesdeGoogleSheets('EdoFuerza 18Jun'),
-          fetchDatosDesdeGoogleSheets('Itinerario')
+          fetchDatosDesdeGoogleSheets('Itinerario'),
+          fetchDatosDesdeGoogleSheets('Operativo')
         ]);
 
         state.incidentes = procesarIncidentes(incidentesRaw);
         state.edoFuerza = procesarEdoFuerza(edoFuerzaRaw);
         state.itinerario = procesarItinerario(itinerarioRaw);
+        state.operativo = procesarOperativo(operativoRaw);
 
         renderizarUI();
 
@@ -1088,10 +1145,35 @@
       `).join('');
     }
 
+    function renderOperativo() {
+      const tbody = document.getElementById('comunicacionesTbody');
+      const totUnidades = document.getElementById('totUnidades');
+
+      if (!state.operativo || state.operativo.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: var(--muted-foreground);">Sin unidades registradas</td></tr>';
+        totUnidades.textContent = '0';
+        return;
+      }
+
+      totUnidades.textContent = state.operativo.length.toLocaleString();
+
+      tbody.innerHTML = state.operativo.map(unit => `
+        <tr>
+          <td><strong>${unit.unidad}</strong></td>
+          <td>${unit.vehiculo}</td>
+          <td>${unit.placa}</td>
+          <td>${unit.chofer}</td>
+          <td>${unit.comitiva}</td>
+          <td>${unit.contacto}</td>
+        </tr>
+      `).join('');
+    }
+
     function renderizarUI() {
       renderIncidencias();
       renderEdoFuerza();
       renderItinerario();
+      renderOperativo();
     }
 
     // ===== FUNCIONES DE UTILIDAD =====
