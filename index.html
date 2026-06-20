@@ -638,6 +638,11 @@
     .debug-log-entry.info {
       color: var(--primary);
     }
+
+    .evento-actual {
+      background-color: rgba(255, 193, 7, 0.25) !important;
+      border-left: 4px solid var(--primary);
+    }
   </style>
 </head>
 
@@ -1091,13 +1096,22 @@
 
       totIncidencias.textContent = state.incidentes.length.toLocaleString();
 
-      tbody.innerHTML = state.incidentes.map(inc => `
-        <tr>
+      const eventoInfo = encontrarEventoActual(state.incidentes);
+
+      tbody.innerHTML = state.incidentes.map((inc, idx) => {
+        const esActual = idx === eventoInfo.indexActual;
+        return `
+        <tr ${esActual ? 'class="evento-actual"' : ''}>
           <td>${inc.fecha}</td>
           <td><strong>${inc.hora}</strong></td>
           <td>${inc.incidente}</td>
         </tr>
-      `).join('');
+      `;
+      }).join('');
+
+      if (eventoInfo.indexActual >= 0) {
+        setTimeout(() => scrollAEvento('incidenciasTbody', eventoInfo.indexActual), 100);
+      }
     }
 
     function renderEdoFuerza() {
@@ -1162,14 +1176,23 @@
         return;
       }
 
-      tbody.innerHTML = state.itinerario.map(evt => `
-        <tr>
+      const eventoInfo = encontrarEventoActual(state.itinerario);
+
+      tbody.innerHTML = state.itinerario.map((evt, idx) => {
+        const esActual = idx === eventoInfo.indexActual;
+        return `
+        <tr ${esActual ? 'class="evento-actual"' : ''}>
           <td>${evt.fecha}</td>
           <td><strong>${evt.hora}</strong></td>
           <td>${evt.mision}</td>
           <td>${evt.actividad}</td>
         </tr>
-      `).join('');
+      `;
+      }).join('');
+
+      if (eventoInfo.indexActual >= 0) {
+        setTimeout(() => scrollAEvento('itinerarioTbody', eventoInfo.indexActual), 100);
+      }
     }
 
     function renderOperativo() {
@@ -1194,6 +1217,63 @@
           <td>${unit.contacto}</td>
         </tr>
       `).join('');
+    }
+
+    function encontrarEventoActual(datos) {
+      if (!datos || datos.length === 0) return { anterior: null, actual: null, siguiente: null, indexActual: -1 };
+      
+      const ahora = new Date();
+      const horaActual = ahora.getHours() * 60 + ahora.getMinutes();
+      
+      let anterior = null, actual = null, siguiente = null, indexActual = -1;
+      
+      for (let i = 0; i < datos.length; i++) {
+        const evt = datos[i];
+        const horaEvt = convertirHoraAMinutos(evt.hora);
+        
+        if (horaEvt < 0) continue;
+        
+        const proximoEvt = datos[i + 1];
+        const horaProxima = proximoEvt ? convertirHoraAMinutos(proximoEvt.hora) : horaEvt + 60;
+        
+        if (horaEvt <= horaActual && horaActual < horaProxima) {
+          actual = evt;
+          indexActual = i;
+          anterior = i > 0 ? datos[i - 1] : null;
+          siguiente = i < datos.length - 1 ? datos[i + 1] : null;
+          break;
+        }
+      }
+      
+      if (!actual && datos.length > 0) {
+        const primerEvt = datos[0];
+        const horaFirst = convertirHoraAMinutos(primerEvt.hora);
+        if (horaFirst > horaActual) {
+          actual = primerEvt;
+          indexActual = 0;
+          siguiente = datos.length > 1 ? datos[1] : null;
+        }
+      }
+      
+      return { anterior, actual, siguiente, indexActual };
+    }
+
+    function scrollAEvento(contenedorId, indexEvento) {
+      const contenedor = document.getElementById(contenedorId);
+      if (!contenedor || indexEvento < 0) return;
+      
+      const filas = contenedor.querySelectorAll('tbody tr');
+      if (indexEvento >= filas.length) return;
+      
+      const fila = filas[indexEvento];
+      const contenedorRect = contenedor.getBoundingClientRect();
+      const filaRect = fila.getBoundingClientRect();
+      
+      const scrollTop = contenedor.scrollTop;
+      const offset = filaRect.top - contenedorRect.top;
+      const centroDeseado = contenedor.clientHeight / 2;
+      
+      contenedor.scrollTop = scrollTop + offset - centroDeseado;
     }
 
     function convertirHoraAMinutos(horaStr) {
@@ -1359,6 +1439,10 @@
 
       setInterval(actualizarReloj, 1000);
       setInterval(renderAhoraProximos, 1000);
+      setInterval(() => {
+        renderIncidencias();
+        renderItinerario();
+      }, 60000);
       setInterval(actualizarDatosDinamicos, POLLING_INTERVAL);
 
       document.getElementById('themeBtn').addEventListener('click', alternarTema);
