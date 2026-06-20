@@ -891,21 +891,37 @@
     }
 
     /**
-     * Procesa estado de fuerza desde CSV con estructura: Corporacion, Mando, Personal, Vehiculos
+     * Procesa estado de fuerza desde CSV con estructura: Corporación, Mando, Personal, Vehículos
+     * NOTA: Los nombres de columnas tienen acentos en el Google Sheet
      */
     function procesarEdoFuerza(rawData) {
       addDebugLog('fuerza', `Procesando ${rawData.length} filas de fuerza...`, 'info');
       
+      // Detectar nombres de columnas disponibles para debugging
+      if (rawData.length > 0) {
+        const columnasDetectadas = Object.keys(rawData[0]);
+        addDebugLog('fuerza', `Columnas detectadas: ${columnasDetectadas.join(', ')}`, 'info');
+      }
+      
       const procesados = rawData
-        .filter(row => row.Corporacion)
-        .map(row => ({
-          corporacion: String(row.Corporacion || '').trim(),
-          mando: String(row.Mando || '').trim(),
-          personal: parseInt(row.Personal) || 0,
-          vehiculos: String(row.Vehiculos || '').trim()
-        }));
+        .filter(row => row.Corporación || row.Corporacion)  // Aceptar ambas variantes
+        .map(row => {
+          const corp = String(row.Corporación || row.Corporacion || '').trim();
+          const mand = String(row.Mando || '').trim();
+          const pers = parseInt(row.Personal) || 0;
+          const vehs = String(row.Vehículos || row.Vehiculos || '').trim();
+          
+          addDebugLog('fuerza', `✓ ${corp}: ${pers} elementos`, 'success');
+          
+          return {
+            corporacion: corp,
+            mando: mand,
+            personal: pers,
+            vehiculos: vehs
+          };
+        });
 
-      addDebugLog('fuerza', `${procesados.length} corporaciones válidas`, 'success');
+      addDebugLog('fuerza', `${procesados.length} corporaciones válidas procesadas`, 'success');
       return procesados;
     }
 
