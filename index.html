@@ -1219,24 +1219,45 @@
       `).join('');
     }
 
+    function convertirFechaHoraATimestamp(fechaStr, horaStr) {
+      if (!fechaStr || !horaStr) return -1;
+      try {
+        const partesFecha = String(fechaStr).split('/');
+        const partesHora = String(horaStr).split(':');
+        
+        if (partesFecha.length < 3 || partesHora.length < 2) return -1;
+        
+        const dia = parseInt(partesFecha[0]) || 0;
+        const mes = parseInt(partesFecha[1]) || 0;
+        const año = parseInt(partesFecha[2]) || 2026;
+        const horas = parseInt(partesHora[0]) || 0;
+        const minutos = parseInt(partesHora[1]) || 0;
+        
+        const fecha = new Date(año, mes - 1, dia, horas, minutos, 0);
+        return fecha.getTime();
+      } catch (e) {
+        return -1;
+      }
+    }
+
     function encontrarEventoActual(datos) {
       if (!datos || datos.length === 0) return { anterior: null, actual: null, siguiente: null, indexActual: -1 };
       
       const ahora = new Date();
-      const horaActual = ahora.getHours() * 60 + ahora.getMinutes();
+      const timestampActual = ahora.getTime();
       
       let anterior = null, actual = null, siguiente = null, indexActual = -1;
       
       for (let i = 0; i < datos.length; i++) {
         const evt = datos[i];
-        const horaEvt = convertirHoraAMinutos(evt.hora);
+        const timestampEvt = convertirFechaHoraATimestamp(evt.fecha, evt.hora);
         
-        if (horaEvt < 0) continue;
+        if (timestampEvt < 0) continue;
         
         const proximoEvt = datos[i + 1];
-        const horaProxima = proximoEvt ? convertirHoraAMinutos(proximoEvt.hora) : horaEvt + 60;
+        const timestampProximo = proximoEvt ? convertirFechaHoraATimestamp(proximoEvt.fecha, proximoEvt.hora) : timestampEvt + 3600000;
         
-        if (horaEvt <= horaActual && horaActual < horaProxima) {
+        if (timestampEvt <= timestampActual && timestampActual < timestampProximo) {
           actual = evt;
           indexActual = i;
           anterior = i > 0 ? datos[i - 1] : null;
@@ -1247,8 +1268,8 @@
       
       if (!actual && datos.length > 0) {
         const primerEvt = datos[0];
-        const horaFirst = convertirHoraAMinutos(primerEvt.hora);
-        if (horaFirst > horaActual) {
+        const timestampFirst = convertirFechaHoraATimestamp(primerEvt.fecha, primerEvt.hora);
+        if (timestampFirst > timestampActual) {
           actual = primerEvt;
           indexActual = 0;
           siguiente = datos.length > 1 ? datos[1] : null;
@@ -1266,14 +1287,9 @@
       if (indexEvento >= filas.length) return;
       
       const fila = filas[indexEvento];
-      const contenedorRect = contenedor.getBoundingClientRect();
-      const filaRect = fila.getBoundingClientRect();
+      const scrollOffset = fila.offsetTop - contenedor.offsetTop - 20;
       
-      const scrollTop = contenedor.scrollTop;
-      const offset = filaRect.top - contenedorRect.top;
-      const centroDeseado = contenedor.clientHeight / 2;
-      
-      contenedor.scrollTop = scrollTop + offset - centroDeseado;
+      contenedor.scrollTop = Math.max(0, scrollOffset);
     }
 
     function convertirHoraAMinutos(horaStr) {
