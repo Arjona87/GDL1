@@ -744,7 +744,7 @@
 
       <!-- CONTENT -->
       <div class="content">
-        <!-- SECTION: AHORA / PROXIMOS 60 MINUTOS -->
+        <!-- SECTION: AHORA / PROXIMOS EVENTOS -->
         <div class="section" id="ahoraProximos" style="margin-bottom: 2rem;">
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
             <!-- AHORA -->
@@ -761,7 +761,7 @@
             </div>
             <!-- PROXIMOS 30 MINUTOS -->
             <div style="background-color: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem;">
-              <div style="font-size: 0.75rem; color: var(--muted-foreground); margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 0.1em;">PROXIMOS 60 MINUTOS</div>
+              <div style="font-size: 0.75rem; color: var(--muted-foreground); margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 0.1em;">PROXIMOS EVENTOS</div>
               <div style="display: flex; flex-direction: column; gap: 1rem; max-height: 300px; overflow-y: auto;" id="proximosEventos">
                 <div style="color: var(--muted-foreground); text-align: center; padding: 2rem 0;">Cargando eventos...</div>
               </div>
@@ -2473,18 +2473,39 @@ secundaria: {
       if (!state.itinerario || state.itinerario.length === 0) return [];
       
       const ahora = new Date();
-      const fechaActual = String(ahora.getDate()).padStart(2, '0') + '/' + String(ahora.getMonth() + 1).padStart(2, '0') + '/' + ahora.getFullYear();
-      const horaActual = ahora.getHours() * 60 + ahora.getMinutes();
-      const horaLimite = horaActual + 60;
+      const timestampActual = ahora.getTime();
       
-      // Primero filtrar por fecha actual
-      const eventosHoy = state.itinerario.filter(evt => evt.fecha === fechaActual);
+      let indexActual = -1;
+      for (let i = 0; i < state.itinerario.length; i++) {
+        const evt = state.itinerario[i];
+        const timestampEvt = convertirFechaHoraATimestamp(evt.fecha, evt.hora);
+        if (timestampEvt < 0) continue;
+        
+        const proximoEvt = state.itinerario[i + 1];
+        const timestampProximo = proximoEvt ? convertirFechaHoraATimestamp(proximoEvt.fecha, proximoEvt.hora) : timestampEvt + 3600000;
+        
+        if (timestampEvt <= timestampActual && timestampActual < timestampProximo) {
+          indexActual = i;
+          break;
+        }
+      }
       
-      // Luego filtrar por rango de horas (próximos 60 minutos)
-      return eventosHoy.filter(evt => {
-        const horaEvt = convertirHoraAMinutos(evt.hora);
-        return horaEvt >= horaActual && horaEvt <= horaLimite;
-      });
+      if (indexActual === -1) {
+        for (let i = 0; i < state.itinerario.length; i++) {
+          const timestampEvt = convertirFechaHoraATimestamp(state.itinerario[i].fecha, state.itinerario[i].hora);
+          if (timestampEvt > timestampActual) {
+            indexActual = i - 1;
+            break;
+          }
+        }
+      }
+      
+      const proximos = [];
+      for (let i = indexActual + 1; i < state.itinerario.length && proximos.length < 3; i++) {
+        proximos.push(state.itinerario[i]);
+      }
+      
+      return proximos;
     }
 
     function renderAhoraProximos() {
@@ -2553,12 +2574,13 @@ secundaria: {
     function actualizarReloj() {
       const ahora = new Date();
       const dia = String(ahora.getDate()).padStart(2, '0');
-      const mes = String(ahora.getMonth() + 1).padStart(2, '0');
+      const meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+      const nombreMes = meses[ahora.getMonth()];
       const horas = String(ahora.getHours()).padStart(2, '0');
       const minutos = String(ahora.getMinutes()).padStart(2, '0');
       const segundos = String(ahora.getSeconds()).padStart(2, '0');
 
-      document.getElementById('relojFecha').textContent = `${dia}/${mes}`;
+      document.getElementById('relojFecha').textContent = `${dia}/${nombreMes}`;
       document.getElementById('relojHora').textContent = `${horas}:${minutos}`;
       document.getElementById('relojSegundos').textContent = segundos;
     }
@@ -2642,14 +2664,15 @@ secundaria: {
         if (tipoIcono === 'stadium') emoji = '\ud83c\udfdf';
         if (tipoIcono === 'airplane') emoji = '\u2708';
         
-        L.circleMarker([ubicacion.lat, ubicacion.lng], {
-          radius: 8,
-          fillColor: '#00AC00',
-          color: '#fff',
-          weight: 2,
-          opacity: 1,
-          fillOpacity: 0.8
-        }).bindPopup(emoji + ' ' + ubicacion.nombre).addTo(mapInstance);
+        const divIcon = L.divIcon({
+          html: `<div style="font-size: 24px; text-align: center; line-height: 1;">${emoji}</div>`,
+          iconSize: [30, 30],
+          className: 'emoji-marker'
+        });
+        
+        L.marker([ubicacion.lat, ubicacion.lng], { icon: divIcon })
+          .bindPopup(emoji + ' ' + ubicacion.nombre)
+          .addTo(mapInstance);
       });
       
       // Llenar selectores de origen y destino
