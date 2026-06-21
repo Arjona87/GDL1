@@ -728,7 +728,7 @@
 
         <!-- SECTION: INCIDENCIAS ESTADIO -->
         <div class="section" id="incidencias">
-          <div class="section-title">INCIDENCIAS ESTADIO · BITÁCORA TÁCTICA</div>
+          <div class="section-title">INCIDENCIAS REPORTADAS</div>
           <div style="display: flex; gap: 1rem; margin-bottom: 1rem;">
             <div class="kpi-card" style="flex: 1;">
               <div class="kpi-label">TOTAL INCIDENCIAS</div>
@@ -741,6 +741,7 @@
                 <tr>
                   <th>Fecha</th>
                   <th>Hora</th>
+                  <th>Lugar</th>
                   <th>Incidente</th>
                 </tr>
               </thead>
@@ -946,7 +947,8 @@
         .map(row => ({
           fecha: String(row.Fecha || '').trim(),
           hora: String(row.Hora || '').trim(),
-          incidente: String(row.Incidente || '').trim()
+          incidente: String(row.Incidente || '').trim(),
+          lugar: String(row.Lugar || '').trim()
         }));
 
       addDebugLog('incidencias', `${procesados.length} incidentes válidos`, 'success');
@@ -1090,7 +1092,7 @@
       const contenedor = document.getElementById('incidenciasContenedor');
 
       if (!state.incidentes || state.incidentes.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="3" style="text-align: center; color: var(--muted-foreground);">Sin incidencias registradas</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: var(--muted-foreground);">Sin incidencias registradas</td></tr>';
         totIncidencias.textContent = '0';
         return;
       }
@@ -1101,10 +1103,19 @@
 
       tbody.innerHTML = state.incidentes.map((inc, idx) => {
         const esActual = idx === eventoInfo.indexActual;
+        
+        let lugarStyle = '';
+        if (inc.lugar === 'ESTADIO') {
+          lugarStyle = 'color: #0066ff; font-weight: bold;';
+        } else if (inc.lugar === 'FFF') {
+          lugarStyle = 'color: #00aa00; font-weight: bold;';
+        }
+        
         return `
         <tr ${esActual ? 'class="evento-actual"' : ''}>
           <td>${inc.fecha}</td>
           <td><strong>${inc.hora}</strong></td>
+          <td style="${lugarStyle}">${inc.lugar}</td>
           <td>${inc.incidente}</td>
         </tr>
       `;
