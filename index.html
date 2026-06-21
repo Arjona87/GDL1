@@ -735,7 +735,7 @@
               <div class="kpi-value" id="totIncidencias">0</div>
             </div>
           </div>
-          <div style="background-color: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; overflow-y: auto; max-height: 400px;">
+          <div id="incidenciasContenedor" style="background-color: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; overflow-y: auto; max-height: 400px;">
             <table class="comms-table" style="margin: 0;">
               <thead>
                 <tr>
@@ -782,7 +782,7 @@
         <!-- SECTION: ITINERARIO -->
         <div class="section" id="itinerario">
           <div class="section-title">ITINERARIO · LÍNEA DEL TIEMPO</div>
-          <div style="background-color: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; overflow-y: auto; max-height: 500px;">
+          <div id="itinerarioContenedor" style="background-color: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; overflow-y: auto; max-height: 500px;">
             <table class="comms-table" style="margin: 0;">
               <thead>
                 <tr>
@@ -1087,6 +1087,7 @@
     function renderIncidencias() {
       const tbody = document.getElementById('incidenciasTbody');
       const totIncidencias = document.getElementById('totIncidencias');
+      const contenedor = document.getElementById('incidenciasContenedor');
 
       if (!state.incidentes || state.incidentes.length === 0) {
         tbody.innerHTML = '<tr><td colspan="3" style="text-align: center; color: var(--muted-foreground);">Sin incidencias registradas</td></tr>';
@@ -1109,8 +1110,8 @@
       `;
       }).join('');
 
-      if (eventoInfo.indexActual >= 0) {
-        setTimeout(() => scrollAEvento('incidenciasTbody', eventoInfo.indexActual), 100);
+      if (eventoInfo.indexActual >= 0 && contenedor) {
+        setTimeout(() => scrollAEvento('incidenciasContenedor', eventoInfo.indexActual), 100);
       }
     }
 
@@ -1170,6 +1171,7 @@
 
     function renderItinerario() {
       const tbody = document.getElementById('itinerarioTbody');
+      const contenedor = document.getElementById('itinerarioContenedor');
 
       if (!state.itinerario || state.itinerario.length === 0) {
         tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: var(--muted-foreground);">Sin eventos registrados</td></tr>';
@@ -1190,8 +1192,8 @@
       `;
       }).join('');
 
-      if (eventoInfo.indexActual >= 0) {
-        setTimeout(() => scrollAEvento('itinerarioTbody', eventoInfo.indexActual), 100);
+      if (eventoInfo.indexActual >= 0 && contenedor) {
+        setTimeout(() => scrollAEvento('itinerarioContenedor', eventoInfo.indexActual), 100);
       }
     }
 
@@ -1282,21 +1284,39 @@
     function scrollAEvento(contenedorId, indexEvento) {
       setTimeout(() => {
         const contenedor = document.getElementById(contenedorId);
-        if (!contenedor || indexEvento < 0) return;
+        if (!contenedor || indexEvento < 0) {
+          console.warn(`[scrollAEvento] Contenedor o indice invalido: ${contenedorId}, ${indexEvento}`);
+          return;
+        }
         
-        const filas = contenedor.querySelectorAll('tbody tr');
-        if (indexEvento >= filas.length) return;
+        const tbody = contenedor.querySelector('tbody');
+        if (!tbody) {
+          console.warn(`[scrollAEvento] No se encontro tbody en ${contenedorId}`);
+          return;
+        }
+        
+        const filas = tbody.querySelectorAll('tr');
+        console.log(`[scrollAEvento] Total de filas: ${filas.length}, buscando indice: ${indexEvento}`);
+        
+        if (indexEvento >= filas.length) {
+          console.warn(`[scrollAEvento] Indice ${indexEvento} fuera de rango (total: ${filas.length})`);
+          return;
+        }
         
         const fila = filas[indexEvento];
         
         try {
-          const offsetTop = fila.offsetTop;
-          contenedor.scrollTop = Math.max(0, offsetTop - 10);
-          console.log(`[scrollAEvento] Evento ${indexEvento} posicionado en parte superior del contenedor`);
+          const offsetTopFila = fila.offsetTop;
+          const offsetTopTbody = tbody.offsetTop;
+          const scrollPosition = offsetTopFila - offsetTopTbody;
+          
+          contenedor.scrollTop = Math.max(0, scrollPosition - 20);
+          
+          console.log(`[scrollAEvento] OK Evento ${indexEvento} posicionado. ScrollTop: ${contenedor.scrollTop}`);
         } catch (e) {
           console.error(`[scrollAEvento] Error al hacer scroll:`, e);
         }
-      }, 200);
+      }, 300);
     }
 
     function convertirHoraAMinutos(horaStr) {
@@ -1312,12 +1332,20 @@
       if (!state.itinerario || state.itinerario.length === 0) return null;
       
       const ahora = new Date();
+      const fechaActual = String(ahora.getDate()).padStart(2, '0') + '/' + String(ahora.getMonth() + 1).padStart(2, '0') + '/' + ahora.getFullYear();
       const horaActual = ahora.getHours() * 60 + ahora.getMinutes();
       
-      for (let evt of state.itinerario) {
+      // Primero filtrar por fecha actual
+      const eventosHoy = state.itinerario.filter(evt => evt.fecha === fechaActual);
+      
+      // Si no hay eventos hoy, retornar null
+      if (eventosHoy.length === 0) return null;
+      
+      // Buscar evento actual en eventos de hoy
+      for (let evt of eventosHoy) {
         const horaEvt = convertirHoraAMinutos(evt.hora);
         if (horaEvt >= 0) {
-          const proximoEvt = state.itinerario[state.itinerario.indexOf(evt) + 1];
+          const proximoEvt = eventosHoy[eventosHoy.indexOf(evt) + 1];
           const horaProxima = proximoEvt ? convertirHoraAMinutos(proximoEvt.hora) : horaEvt + 60;
           
           if (horaActual >= horaEvt && horaActual < horaProxima) {
@@ -1325,6 +1353,16 @@
           }
         }
       }
+      
+      // Si no hay evento actual, retornar el primero de hoy si la hora actual es antes que él
+      if (eventosHoy.length > 0) {
+        const primerEvt = eventosHoy[0];
+        const horaPrimer = convertirHoraAMinutos(primerEvt.hora);
+        if (horaActual < horaPrimer) {
+          return { ...primerEvt, horaEvt: horaPrimer, horaProxima: horaPrimer + 60 };
+        }
+      }
+      
       return null;
     }
 
