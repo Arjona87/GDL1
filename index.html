@@ -1370,10 +1370,15 @@
       if (!state.itinerario || state.itinerario.length === 0) return [];
       
       const ahora = new Date();
+      const fechaActual = String(ahora.getDate()).padStart(2, '0') + '/' + String(ahora.getMonth() + 1).padStart(2, '0') + '/' + ahora.getFullYear();
       const horaActual = ahora.getHours() * 60 + ahora.getMinutes();
       const horaLimite = horaActual + 30;
       
-      return state.itinerario.filter(evt => {
+      // Primero filtrar por fecha actual
+      const eventosHoy = state.itinerario.filter(evt => evt.fecha === fechaActual);
+      
+      // Luego filtrar por rango de horas (próximos 30 minutos)
+      return eventosHoy.filter(evt => {
         const horaEvt = convertirHoraAMinutos(evt.hora);
         return horaEvt >= horaActual && horaEvt <= horaLimite;
       });
