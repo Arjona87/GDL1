@@ -9,6 +9,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700;800&display=swap" rel="stylesheet">
   <link rel="icon" href="https://d2xsxph8kpxj0f.cloudfront.net/310419663031442398/aY3EEaALubQxCRHywAzhk5/logo_c5-GezMkgmV2eP9LbYehxtWF4.webp" type="image/webp">
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
   
   <style>
     /* ===== RESET Y VARIABLES GLOBALES ===== */
@@ -96,6 +98,46 @@
         animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
       }
+    }
+
+    /* ===== ESTILOS LEAFLET ===== */
+    .leaflet-container {
+      background-color: var(--card) !important;
+      border-radius: var(--radius);
+    }
+
+    .leaflet-control-zoom {
+      border: 1px solid var(--border) !important;
+      border-radius: var(--radius) !important;
+    }
+
+    .leaflet-control-zoom a {
+      background-color: var(--card) !important;
+      color: var(--foreground) !important;
+      border: 1px solid var(--border) !important;
+    }
+
+    .leaflet-control-zoom a:hover {
+      background-color: var(--muted) !important;
+    }
+
+    .leaflet-control-attribution {
+      background-color: rgba(0, 0, 0, 0.5) !important;
+      color: #fff !important;
+      font-size: 0.75rem !important;
+    }
+
+    .leaflet-control-attribution a {
+      color: #fff !important;
+    }
+
+    html[data-theme="light"] .leaflet-control-attribution {
+      background-color: rgba(255, 255, 255, 0.8) !important;
+      color: #333 !important;
+    }
+
+    html[data-theme="light"] .leaflet-control-attribution a {
+      color: #0066cc !important;
     }
 
     /* ===== UTILIDADES ===== */
@@ -662,6 +704,7 @@
         <div class="nav-item" data-section="fuerza">Estado de Fuerza</div>
         <div class="nav-item" data-section="itinerario">Itinerario</div>
         <div class="nav-item" data-section="comunicaciones">Comunicaciones</div>
+        <div class="nav-item" data-section="mapas">🗺️ Mapa de Rutas</div>
       </div>
 
       <div class="sidebar-footer">
@@ -826,6 +869,51 @@
             </table>
           </div>
           <div id="debugComunicaciones" class="debug-log" style="display: none;"></div>
+        </div>
+
+        <!-- SECTION: MAPA DE RUTAS -->
+        <div class="section" id="mapas">
+          <div class="section-title">MAPA DE RUTAS - OPERATIVO</div>
+          
+          <!-- Selectores de origen y destino -->
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
+            <div>
+              <label style="font-size: 0.75rem; color: var(--muted-foreground); text-transform: uppercase; letter-spacing: 0.1em; display: block; margin-bottom: 0.5rem;">Punto de Origen</label>
+              <select id="origen" style="width: 100%; padding: 0.5rem; border: 1px solid var(--border); border-radius: var(--radius); background-color: var(--card); color: var(--foreground); font-family: inherit;">
+                <option value="">Selecciona el origen</option>
+              </select>
+            </div>
+            <div>
+              <label style="font-size: 0.75rem; color: var(--muted-foreground); text-transform: uppercase; letter-spacing: 0.1em; display: block; margin-bottom: 0.5rem;">Punto de Destino</label>
+              <select id="destino" style="width: 100%; padding: 0.5rem; border: 1px solid var(--border); border-radius: var(--radius); background-color: var(--card); color: var(--foreground); font-family: inherit;">
+                <option value="">Selecciona el destino</option>
+              </select>
+            </div>
+          </div>
+          
+          <!-- Botón Ver Rutas -->
+          <button id="btnVerRutas" style="width: 100%; padding: 0.75rem; background-color: var(--primary); color: var(--primary-foreground); border: none; border-radius: var(--radius); font-weight: 600; cursor: pointer; margin-bottom: 1.5rem; text-transform: uppercase; letter-spacing: 0.1em; font-size: 0.85rem;">➜ Ver Rutas</button>
+          
+          <!-- Leyenda de Rutas -->
+          <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 1.5rem; font-size: 0.85rem;">
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+              <div style="width: 20px; height: 3px; background-color: #00AC00;"></div>
+              <span>Ruta Principal</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+              <div style="width: 20px; height: 3px; background-color: #1e40af;"></div>
+              <span>Ruta Secundaria</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+              <div style="width: 20px; height: 3px; background-color: #FE00D2;"></div>
+              <span>Ruta Terciaria</span>
+            </div>
+          </div>
+          
+          <!-- Contenedor del Mapa -->
+          <div id="map" style="background-color: var(--card); border: 1px solid var(--border); border-radius: var(--radius); height: 500px; position: relative;"></div>
+          
+          <div id="debugMapas" class="debug-log" style="display: none;"></div>
         </div>
 
         <!-- FOOTER -->
@@ -1083,6 +1171,52 @@
         statusText.textContent = 'Error de conexión';
       }
     }
+
+    // ===== DATOS DE MAPA =====
+    const UBICACIONES = {
+      'aeropuerto_gdl': { nombre: '✈️ Aeropuerto GDL', lat: 20.52666372, lng: -103.2991887 },
+      'base_aerea': { nombre: '🛡️ Base Aérea Militar', lat: 20.74397913, lng: -103.4477182 },
+      'aeropuerto_pvr': { nombre: '✈️ Aeropuerto Puerto Vallarta', lat: 20.67700735, lng: -105.249859 },
+      'hyatt': { nombre: '🏨 Hyatt Regency Andares', lat: 20.71251651, lng: -103.412327 },
+      'hilton': { nombre: '🏨 Hilton Midtown', lat: 20.69372434, lng: -103.3748342 },
+      'jw_marriott': { nombre: '🏨 JW Marriott', lat: 20.68890452, lng: -103.3819227 },
+      'grand_fiesta': { nombre: '🏨 Grand Fiesta Americana', lat: 20.68890452, lng: -103.3819227 },
+      'westin': { nombre: '🏨 The Westin', lat: 20.70140452, lng: -103.3919227 },
+      'ac_hotel': { nombre: '🏨 AC Hotel by Marriot', lat: 20.69890452, lng: -103.3969227 },
+      'fiesta_inn': { nombre: '🏨 Fiesta Inn Expo', lat: 20.68890452, lng: -103.3819227 },
+      'ibis': { nombre: '🏨 Ibis Guadalajara', lat: 20.68890452, lng: -103.3819227 },
+      'estadio_gdl': { nombre: '🏟️ Estadio Guadalajara', lat: 20.65890452, lng: -103.3719227 },
+      'estadio_jalisco': { nombre: '🏟️ Estadio Jalisco', lat: 20.66890452, lng: -103.3619227 },
+      'sports_arena': { nombre: '🏋️ Sports Arena Club', lat: 20.67890452, lng: -103.3519227 },
+      'academia_aga': { nombre: '⚽ Academia AGA', lat: 20.68890452, lng: -103.3419227 }
+    };
+
+    const RUTAS = {
+      'principal': {
+        kml: [
+          [20.52666372, -103.2991887], [20.55, -103.32], [20.60, -103.35], [20.65890452, -103.3719227]
+        ]
+      },
+      'secundaria': {
+        kml: [
+          [20.52666372, -103.2991887], [20.53, -103.30], [20.58, -103.33], [20.65890452, -103.3719227]
+        ]
+      },
+      'terciaria': {
+        kml: [
+          [20.52666372, -103.2991887], [20.54, -103.31], [20.62, -103.36], [20.65890452, -103.3719227]
+        ]
+      }
+    };
+
+    const estilos = {
+      'principal': { color: '#00AC00', weight: 4, opacity: 0.8 },
+      'secundaria': { color: '#1e40af', weight: 3, opacity: 0.7 },
+      'terciaria': { color: '#FE00D2', weight: 2, opacity: 0.6 }
+    };
+
+    let mapInstance = null;
+    let rutasVisibles = {};
 
     // ===== FUNCIONES DE RENDERIZADO =====
 
@@ -1505,6 +1639,93 @@
       }
     }
 
+    // ===== FUNCIONES DEL MAPA =====
+
+    function initMap() {
+      if (mapInstance) return;
+      
+      const mapDiv = document.getElementById('map');
+      if (!mapDiv) return;
+      
+      // Inicializar mapa centrado en Guadalajara
+      mapInstance = L.map('map').setView([20.6596, -103.3496], 12);
+      
+      // Agregar capa de OpenStreetMap
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors',
+        maxZoom: 19
+      }).addTo(mapInstance);
+      
+      // Agregar marcadores de ubicaciones
+      Object.entries(UBICACIONES).forEach(([key, ubicacion]) => {
+        L.circleMarker([ubicacion.lat, ubicacion.lng], {
+          radius: 6,
+          fillColor: '#00AC00',
+          color: '#fff',
+          weight: 2,
+          opacity: 1,
+          fillOpacity: 0.8
+        }).bindPopup(ubicacion.nombre).addTo(mapInstance);
+      });
+      
+      // Llenar selectores de origen y destino
+      const origenSelect = document.getElementById('origen');
+      const destinoSelect = document.getElementById('destino');
+      
+      Object.entries(UBICACIONES).forEach(([key, ubicacion]) => {
+        const option = document.createElement('option');
+        option.value = key;
+        option.textContent = ubicacion.nombre;
+        origenSelect.appendChild(option.cloneNode(true));
+        destinoSelect.appendChild(option);
+      });
+    }
+
+    function actualizarOpcionesDestino() {
+      const origen = document.getElementById('origen').value;
+      const destino = document.getElementById('destino');
+      
+      if (origen) {
+        destino.disabled = false;
+      } else {
+        destino.disabled = true;
+        destino.value = '';
+      }
+    }
+
+    function mostrarRutas() {
+      const origen = document.getElementById('origen').value;
+      const destino = document.getElementById('destino').value;
+      
+      if (!origen || !destino) {
+        alert('Por favor selecciona origen y destino');
+        return;
+      }
+      
+      // Limpiar rutas anteriores
+      Object.values(rutasVisibles).forEach(ruta => {
+        if (mapInstance) mapInstance.removeLayer(ruta);
+      });
+      rutasVisibles = {};
+      
+      // Mostrar las 3 rutas
+      Object.entries(RUTAS).forEach(([tipo, ruta]) => {
+        const polyline = L.polyline(ruta.kml, estilos[tipo]).addTo(mapInstance);
+        rutasVisibles[tipo] = polyline;
+      });
+      
+      // Ajustar vista del mapa
+      const origenUbicacion = UBICACIONES[origen];
+      const destinoUbicacion = UBICACIONES[destino];
+      
+      const bounds = L.latLngBounds([
+        [origenUbicacion.lat, origenUbicacion.lng],
+        [destinoUbicacion.lat, destinoUbicacion.lng]
+      ]);
+      
+      if (mapInstance) mapInstance.fitBounds(bounds, { padding: [50, 50] });
+    }
+
     // ===== INICIALIZACIÓN =====
 
     async function inicializar() {
@@ -1513,6 +1734,7 @@
       cargarTemaGuardado();
       await actualizarDatosDinamicos();
       actualizarReloj();
+      initMap();
 
       setInterval(actualizarReloj, 1000);
       setInterval(renderAhoraProximos, 1000);
@@ -1531,6 +1753,10 @@
           navegarASeccion(sectionId);
         });
       });
+
+      // Event listeners para el mapa
+      document.getElementById('btnVerRutas').addEventListener('click', mostrarRutas);
+      document.getElementById('origen').addEventListener('change', actualizarOpcionesDestino);
 
       console.log('C5 Dashboard inicializado correctamente');
     }
