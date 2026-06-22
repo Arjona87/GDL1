@@ -1190,42 +1190,42 @@
         lng: -105.249859
       },
       'hyatt': {
-        nombre: '🏨 Hyatt Regency Andares',
+        nombre: '🏢 Hyatt Regency Andares',
         lat: 20.71251651,
         lng: -103.412327
       },
       'hilton': {
-        nombre: '🏨 Hilton Midtown',
+        nombre: '🏢 Hilton Midtown',
         lat: 20.69372434,
         lng: -103.3748342
       },
       'jw_marriott': {
-        nombre: '🏨 JW Marriott',
+        nombre: '🏢 JW Marriott',
         lat: 20.6979525,
         lng: -103.3721699
       },
       'fiesta_americana': {
-        nombre: '🏨 Grand Fiesta Americana',
+        nombre: '🏢 Grand Fiesta Americana',
         lat: 20.70326364,
         lng: -103.3762418
       },
       'westin': {
-        nombre: '🏨 The Westin',
+        nombre: '🏢 The Westin',
         lat: 20.65293507,
         lng: -103.3893272
       },
       'ac_hotel': {
-        nombre: '🏨 AC Hotel by Marriot',
+        nombre: '🏢 AC Hotel by Marriot',
         lat: 20.69788,
         lng: -103.3736651
       },
       'fiesta_inn': {
-        nombre: '🏨 Fiesta Inn Expo',
+        nombre: '🏢 Fiesta Inn Expo',
         lat: 20.65234157,
         lng: -103.3964204
       },
       'ibis': {
-        nombre: '🏨 Ibis Guadalajara',
+        nombre: '🏢 Ibis Guadalajara',
         lat: 20.65455542,
         lng: -103.3926616
       },
@@ -1234,13 +1234,8 @@
         lat: 20.6821176,
         lng: -103.4623344
       },
-      'estadio_jalisco': {
-        nombre: '🏟️ Estadio Jalisco',
-        lat: 20.70498464,
-        lng: -103.3283486
-      },
       'sports_arena': {
-        nombre: '🏋️ Sports Arena Club',
+        nombre: '⚽ Sports Arena Club',
         lat: 20.71852963,
         lng: -103.4912889
       },
@@ -2666,7 +2661,7 @@ secundaria: {
       Object.entries(UBICACIONES).forEach(([key, ubicacion]) => {
         const tipoIcono = tiposIcono[key] || 'ball';
         let emoji = '\u26bd';
-        if (tipoIcono === 'bed') emoji = '\ud83d\udecf';
+        if (tipoIcono === 'building') emoji = '\ud83d\udecf';
         if (tipoIcono === 'stadium') emoji = '\ud83c\udfdf';
         if (tipoIcono === 'airplane') emoji = '\u2708';
         
