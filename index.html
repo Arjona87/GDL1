@@ -2638,20 +2638,19 @@ secundaria: {
       
       // Mapeo de ubicaciones a tipos de icono
       const tiposIcono = {
-        'hyatt': 'bed',
-        'hilton': 'bed',
-        'jw_marriott': 'bed',
-        'fiesta_americana': 'bed',
-        'westin': 'bed',
-        'ac_hotel': 'bed',
-        'fiesta_inn': 'bed',
-        'ibis': 'bed',
+        'hyatt': 'building',
+        'hilton': 'building',
+        'jw_marriott': 'building',
+        'fiesta_americana': 'building',
+        'westin': 'building',
+        'ac_hotel': 'building',
+        'fiesta_inn': 'building',
+        'ibis': 'building',
         'sports_arena': 'ball',
         'academia_aga': 'ball',
         'chivas_verde_valle': 'ball',
         'chivas_verde_valle_new': 'ball',
         'estadio_gdl': 'stadium',
-        'estadio_jalisco': 'stadium',
         'aeropuerto_gdl': 'airplane',
         'base_aerea': 'airplane',
         'aeropuerto_pvr': 'airplane'
@@ -2661,7 +2660,7 @@ secundaria: {
       Object.entries(UBICACIONES).forEach(([key, ubicacion]) => {
         const tipoIcono = tiposIcono[key] || 'ball';
         let emoji = '\u26bd';
-        if (tipoIcono === 'building') emoji = '\ud83d\udecf';
+        if (tipoIcono === 'building') emoji = '\ud83c\udfe2';
         if (tipoIcono === 'stadium') emoji = '\ud83c\udfdf';
         if (tipoIcono === 'airplane') emoji = '\u2708';
         
