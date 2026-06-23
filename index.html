@@ -586,6 +586,59 @@
       }
     }
 
+    /* ===== BOTTOM NAVIGATION (CELULAR) ===== */
+    .bottom-nav {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 70px;
+      background-color: var(--sidebar);
+      border-top: 1px solid var(--border);
+      justify-content: space-around;
+      align-items: center;
+      z-index: 1000;
+      gap: 0;
+    }
+
+    .bottom-nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      flex: 1;
+      height: 100%;
+      cursor: pointer;
+      color: var(--muted-foreground);
+      font-size: 0.625rem;
+      text-align: center;
+      padding: 0.5rem;
+      transition: all 0.3s ease;
+      border: none;
+      background: none;
+    }
+
+    .bottom-nav-item:hover {
+      color: var(--primary);
+      background-color: rgba(255, 165, 0, 0.1);
+    }
+
+    .bottom-nav-item.active {
+      color: var(--primary);
+      border-top: 3px solid var(--primary);
+    }
+
+    .bottom-nav-item-icon {
+      font-size: 1.5rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .bottom-nav-item-label {
+      font-size: 0.55rem;
+      font-weight: 500;
+    }
+
     @media (max-width: 768px) {
       /* Header compacto para celular - Reducido 20% */
       .header {
@@ -673,9 +726,25 @@
       th, td {
         padding: 0.4rem;
       }
-    }
 
+      /* Ocultar sidebar y mostrar bottom-nav */
+      .sidebar {
+        display: none;
+      }
 
+      .bottom-nav {
+        display: flex;
+      }
+
+      .container {
+        flex-direction: column;
+      }
+
+      .main {
+        width: 100%;
+        margin-left: 0;
+        margin-bottom: 70px;
+      }
     }
 
     @media (max-width: 480px) {
@@ -2812,10 +2881,16 @@ secundaria: {
       document.getElementById('themeBtn').addEventListener('click', alternarTema);
       document.getElementById('updateBtn').addEventListener('click', actualizarDatosDinamicos);
 
-      document.querySelectorAll('.nav-item, .mobile-nav-item').forEach(item => {
+      document.querySelectorAll('.nav-item, .mobile-nav-item, .bottom-nav-item').forEach(item => {
         item.addEventListener('click', () => {
           const sectionId = item.dataset.section;
           navegarASeccion(sectionId);
+          
+          // Actualizar estado activo en bottom-nav
+          document.querySelectorAll('.bottom-nav-item').forEach(btn => {
+            btn.classList.remove('active');
+          });
+          document.querySelector('.bottom-nav-item[data-section="' + sectionId + '"]')?.classList.add('active');
         });
       });
 
@@ -2831,6 +2906,30 @@ secundaria: {
     } else {
       inicializar();
     }
-  </script>
+    </script>
+
+    <!-- BOTTOM NAVIGATION (CELULAR) -->
+    <div class="bottom-nav">
+      <button class="bottom-nav-item active" data-section="incidencias">
+        <div class="bottom-nav-item-icon">📍</div>
+        <div class="bottom-nav-item-label">Incidencias</div>
+      </button>
+      <button class="bottom-nav-item" data-section="fuerza">
+        <div class="bottom-nav-item-icon">💪</div>
+        <div class="bottom-nav-item-label">Fuerza</div>
+      </button>
+      <button class="bottom-nav-item" data-section="itinerario">
+        <div class="bottom-nav-item-icon">📅</div>
+        <div class="bottom-nav-item-label">Itinerario</div>
+      </button>
+      <button class="bottom-nav-item" data-section="comunicaciones">
+        <div class="bottom-nav-item-icon">📢</div>
+        <div class="bottom-nav-item-label">Comun.</div>
+      </button>
+      <button class="bottom-nav-item" data-section="mapas">
+        <div class="bottom-nav-item-icon">🗺️</div>
+        <div class="bottom-nav-item-label">Mapa</div>
+      </button>
+    </div>
 </body>
 </html>
