@@ -510,6 +510,35 @@
       color: var(--foreground);
     }
 
+    .sortable-header {
+      cursor: pointer;
+      user-select: none;
+      transition: background-color 0.2s ease;
+      position: relative;
+    }
+
+    .sortable-header:hover {
+      background-color: var(--primary);
+      color: var(--primary-foreground);
+    }
+
+    .sort-indicator {
+      display: inline-block;
+      margin-left: 0.5rem;
+      font-size: 0.85em;
+      opacity: 0.5;
+      transition: opacity 0.2s ease;
+    }
+
+    .sortable-header:hover .sort-indicator {
+      opacity: 1;
+    }
+
+    .sortable-header.active .sort-indicator {
+      opacity: 1;
+      color: var(--primary);
+    }
+
     .comms-table td {
       padding: 0.75rem;
       border-bottom: 1px solid var(--border);
@@ -892,10 +921,10 @@
             <table class="comms-table" style="margin: 0;">
               <thead>
                 <tr>
-                  <th>Fecha</th>
-                  <th>Hora</th>
-                  <th>Lugar</th>
-                  <th>Incidente</th>
+                  <th class="sortable-header" data-column="fecha">Fecha <span class="sort-indicator">↓</span></th>
+                  <th class="sortable-header" data-column="hora">Hora</th>
+                  <th class="sortable-header" data-column="lugar">Lugar</th>
+                  <th class="sortable-header" data-column="incidente">Incidente</th>
                 </tr>
               </thead>
               <tbody id="incidenciasTbody">
@@ -940,10 +969,10 @@
             <table class="comms-table" style="margin: 0;">
               <thead>
                 <tr>
-                  <th>Fecha</th>
-                  <th>Hora</th>
-                  <th>Misión</th>
-                  <th>Actividad</th>
+                  <th class="sortable-header" data-column="fecha">Fecha <span class="sort-indicator">↓</span></th>
+                  <th class="sortable-header" data-column="hora">Hora</th>
+                  <th class="sortable-header" data-column="mision">Misión</th>
+                  <th class="sortable-header" data-column="actividad">Actividad</th>
                 </tr>
               </thead>
               <tbody id="itinerarioTbody">
@@ -2286,6 +2315,131 @@ secundaria: {
     let mapInstance = null;
     let rutasVisibles = {};
 
+    // ===== ESTADO DE ORDENAMIENTO =====
+    let sortStateIncidencias = { columna: 'fecha', direccion: 'desc' };
+    let sortStateItinerario = { columna: 'fecha', direccion: 'desc' };
+
+    // ===== FUNCIONES DE ORDENAMIENTO =====
+    function ordenarIncidencias(columna) {
+      // Si es la misma columna, toggle dirección
+      if (sortStateIncidencias.columna === columna) {
+        sortStateIncidencias.direccion = sortStateIncidencias.direccion === 'desc' ? 'asc' : 'desc';
+      } else {
+        sortStateIncidencias.columna = columna;
+        sortStateIncidencias.direccion = 'desc'; // Default desc para nueva columna
+      }
+      
+      // Actualizar indicadores visuales
+      actualizarIndicadoresOrdenamiento('incidenciasContenedor', columna, sortStateIncidencias.direccion);
+      
+      // Ordenar datos
+      const incidentesOrdenados = [...state.incidentes].sort((a, b) => {
+        let valA = a[columna];
+        let valB = b[columna];
+        
+        // Convertir a números si es fecha o hora
+        if (columna === 'fecha' || columna === 'hora') {
+          valA = convertirAComparable(valA);
+          valB = convertirAComparable(valB);
+        } else {
+          valA = String(valA).toLowerCase();
+          valB = String(valB).toLowerCase();
+        }
+        
+        if (valA < valB) return sortStateIncidencias.direccion === 'asc' ? -1 : 1;
+        if (valA > valB) return sortStateIncidencias.direccion === 'asc' ? 1 : -1;
+        return 0;
+      });
+      
+      state.incidentes = incidentesOrdenados;
+      renderIncidencias();
+    }
+
+    function ordenarItinerario(columna) {
+      // Si es la misma columna, toggle dirección
+      if (sortStateItinerario.columna === columna) {
+        sortStateItinerario.direccion = sortStateItinerario.direccion === 'desc' ? 'asc' : 'desc';
+      } else {
+        sortStateItinerario.columna = columna;
+        sortStateItinerario.direccion = 'desc'; // Default desc para nueva columna
+      }
+      
+      // Actualizar indicadores visuales
+      actualizarIndicadoresOrdenamiento('itinerarioContenedor', columna, sortStateItinerario.direccion);
+      
+      // Ordenar datos
+      const itinerarioOrdenado = [...state.itinerario].sort((a, b) => {
+        let valA = a[columna];
+        let valB = b[columna];
+        
+        // Convertir a números si es fecha o hora
+        if (columna === 'fecha' || columna === 'hora') {
+          valA = convertirAComparable(valA);
+          valB = convertirAComparable(valB);
+        } else {
+          valA = String(valA).toLowerCase();
+          valB = String(valB).toLowerCase();
+        }
+        
+        if (valA < valB) return sortStateItinerario.direccion === 'asc' ? -1 : 1;
+        if (valA > valB) return sortStateItinerario.direccion === 'asc' ? 1 : -1;
+        return 0;
+      });
+      
+      state.itinerario = itinerarioOrdenado;
+      renderItinerario();
+    }
+
+    function convertirAComparable(valor) {
+      // Convierte fechas DD/Mes/YYYY o HH:MM a números comparables
+      if (!valor) return 0;
+      
+      // Si es hora (HH:MM)
+      if (/^\d{2}:\d{2}$/.test(valor)) {
+        const [horas, minutos] = valor.split(':').map(Number);
+        return horas * 60 + minutos;
+      }
+      
+      // Si es fecha (DD/Mes/YYYY o DD/Mes)
+      if (valor.includes('/')) {
+        const partes = valor.split('/');
+        if (partes.length >= 2) {
+          const dia = parseInt(partes[0]);
+          const meses = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+          const mesStr = partes[1].toLowerCase();
+          const mes = meses.indexOf(mesStr) + 1;
+          const año = partes[2] ? parseInt(partes[2]) : 2026;
+          return año * 10000 + mes * 100 + dia;
+        }
+      }
+      
+      return 0;
+    }
+
+    function actualizarIndicadoresOrdenamiento(contenedorId, columnaActiva, direccion) {
+      const contenedor = document.getElementById(contenedorId);
+      if (!contenedor) return;
+      
+      // Remover indicadores de todas las columnas
+      contenedor.querySelectorAll('.sortable-header').forEach(th => {
+        th.classList.remove('active');
+        const indicator = th.querySelector('.sort-indicator');
+        if (indicator) {
+          indicator.textContent = '↕';
+        }
+      });
+      
+      // Agregar indicador a la columna activa
+      const thActiva = contenedor.querySelector(`.sortable-header[data-column="${columnaActiva}"]`);
+      if (thActiva) {
+        thActiva.classList.add('active');
+        const indicator = thActiva.querySelector('.sort-indicator');
+        if (indicator) {
+          indicator.textContent = direccion === 'desc' ? '↓' : '↑';
+        }
+      }
+    }
+
     // ===== FUNCIONES DE RENDERIZADO =====
 
     function renderIncidencias() {
@@ -2894,9 +3048,29 @@ secundaria: {
         });
       });
 
+      // Event listeners para encabezados sortables de INCIDENCIAS
+      document.querySelectorAll('#incidenciasContenedor .sortable-header').forEach(th => {
+        th.addEventListener('click', () => {
+          const columna = th.dataset.column;
+          ordenarIncidencias(columna);
+        });
+      });
+
+      // Event listeners para encabezados sortables de ITINERARIO
+      document.querySelectorAll('#itinerarioContenedor .sortable-header').forEach(th => {
+        th.addEventListener('click', () => {
+          const columna = th.dataset.column;
+          ordenarItinerario(columna);
+        });
+      });
+
       // Event listeners para el mapa
       document.getElementById('btnVerRutas').addEventListener('click', mostrarRutas);
       document.getElementById('origen').addEventListener('change', actualizarOpcionesDestino);
+
+      // Inicializar indicadores de ordenamiento (default: FECHA descendente)
+      actualizarIndicadoresOrdenamiento('incidenciasContenedor', 'fecha', 'desc');
+      actualizarIndicadoresOrdenamiento('itinerarioContenedor', 'fecha', 'desc');
 
       console.log('C5 Dashboard inicializado correctamente');
     }
